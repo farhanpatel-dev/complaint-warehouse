@@ -21,7 +21,7 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: ruff check .
       - run: black --check .
-      - run: sqlfluff lint db sql src
+      - run: sqlfluff lint db sql src dbt/models dbt/tests
 
   test:
     runs-on: ubuntu-latest
@@ -57,6 +57,59 @@ jobs:
         run: pytest -m "not integration" --cov=complaint_warehouse --cov-report=term-missing
       - name: Integration tests
         run: pytest -m integration
+
+  dbt:
+    # End-to-end on a real CFPB sample: ingest the fixture zips with the real CLI, then build
+    # every dbt node twice. The second build exercises the incremental paths (partitioned
+    # fact, complaint_text) and must still pass all tests.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:0.8.0-pg16
+        env:
+          POSTGRES_DB: complaints
+          POSTGRES_USER: cw
+          POSTGRES_PASSWORD: cw
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cw -d complaints"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql://cw:cw@localhost:5432/complaints
+      DBT_HOST: localhost
+      DBT_PORT: "5432"
+      DBT_PROFILES_DIR: ${{ github.workspace }}/dbt
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dbt]"
+      - name: Initialise database
+        run: |
+          for f in db/init/*.sql; do
+            PGPASSWORD=cw psql -h localhost -U cw -d complaints -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - name: Ingest fixture sample
+        run: |
+          python -m complaint_warehouse.ingest bulk --file tests/fixtures/ci_bulk.zip
+          python -m complaint_warehouse.ingest narratives --file tests/fixtures/ci_narratives.zip
+      - name: dbt deps
+        working-directory: dbt
+        run: dbt deps
+      - name: dbt build (initial)
+        working-directory: dbt
+        run: dbt build
+      - name: dbt build (incremental rerun)
+        working-directory: dbt
+        run: dbt build
+      - name: dbt docs generate
+        working-directory: dbt
+        run: dbt docs generate
 
   docker:
     runs-on: ubuntu-latest
