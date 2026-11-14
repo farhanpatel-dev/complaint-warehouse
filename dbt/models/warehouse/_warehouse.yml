@@ -1,0 +1,175 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: Calendar dimension, one row per day from 2011-12-01 to 2030-12-31.
+    columns:
+      - name: date_key
+        description: Smart key YYYYMMDD.
+        data_tests: [unique, not_null]
+      - name: date_day
+        description: Calendar date.
+        data_tests: [unique, not_null]
+      - name: month_start
+        description: First day of the month (dashboard grouping key).
+      - name: iso_week
+        description: ISO-8601 week number.
+      - name: is_weekend
+        description: Saturday or Sunday.
+
+  - name: dim_geo
+    description: Consumer location at (state_code, zip_code) grain, with Census region and division.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [state_code, zip_code]
+    columns:
+      - name: geo_key
+        description: 64-bit hash of (state_code, zip_code); -1 is the unknown member.
+        data_tests: [unique, not_null]
+      - name: state_code
+        description: Two-letter postal code, '--' if missing.
+        data_tests: [not_null]
+      - name: zip_code
+        description: ZIP as published by the CFPB (5-digit or masked like '391XX').
+      - name: zip3
+        description: First three digits of the ZIP, available for masked ZIPs too.
+      - name: is_zip_masked
+        description: True when the CFPB published only the ZIP3 (e.g. '391XX').
+      - name: census_region
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Northeast, Midwest, South, West, Territories, Freely associated states, Military, Unknown, Unknown member]
+
+  - name: dim_company
+    description: >
+      Company dimension, SCD Type 2. One row per version of a company's curated attributes;
+      half-open validity [valid_from, valid_to). The first version is backdated to
+      1900-01-01 so historical complaints resolve.
+    data_tests:
+      - scd2_valid_windows:
+          arguments:
+            natural_key: company_name
+    columns:
+      - name: company_key
+        description: Surrogate key of a company version (hash of company_name, valid_from); -1 is the unknown member.
+        data_tests: [unique, not_null]
+      - name: company_name
+        description: Company name as published by the CFPB (natural key).
+        data_tests: [not_null]
+      - name: parent_group
+        description: Corporate parent from the company_groups seed; defaults to company_name.
+      - name: industry
+        description: Industry from the company_groups seed; 'Unclassified' if not curated.
+      - name: valid_from
+        description: Start of this version's validity (inclusive).
+      - name: valid_to
+        description: End of validity (exclusive); 9999-12-31 for the current version.
+      - name: is_current
+        description: True for the version in effect now.
+
+  - name: dim_product
+    description: >
+      Product dimension at (product, sub_product) grain, SCD Type 2 on product_family and
+      is_current_name. Same validity conventions as dim_company.
+    data_tests:
+      - scd2_valid_windows:
+          arguments:
+            natural_key: product_nk
+    columns:
+      - name: product_key
+        description: Surrogate key of a product version; -1 is the unknown member.
+        data_tests: [unique, not_null]
+      - name: product_nk
+        description: Natural key "product | sub_product".
+        data_tests: [not_null]
+      - name: product
+        description: CFPB product name (taxonomy varies by era).
+      - name: sub_product
+        description: CFPB sub-product, '(none)' if not applicable.
+      - name: product_family
+        description: Stable grouping across CFPB taxonomy changes; 'Unmapped' signals a missing seed row.
+        data_tests: [not_null]
+      - name: is_current_name
+        description: True if the product name is in the CFPB's current taxonomy.
+
+  - name: fact_complaint
+    description: >
+      One row per complaint. Range-partitioned by month on date_received, built by the custom
+      partitioned_incremental materialization. Dimension keys are resolved "as was" (the
+      version valid on date_received).
+    columns:
+      - name: complaint_id
+        description: CFPB complaint id (degenerate dimension).
+        data_tests: [unique, not_null]
+      - name: date_key
+        description: FK to dim_date.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: date_received
+        description: Partition key; same day as date_key.
+        data_tests: [not_null]
+      - name: company_key
+        description: FK to dim_company (version valid on date_received).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_company')
+                field: company_key
+      - name: product_key
+        description: FK to dim_product (version valid on date_received).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+      - name: geo_key
+        description: FK to dim_geo.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geo')
+                field: geo_key
+      - name: response_type
+        description: Company response to the consumer.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Closed with explanation
+                  - Closed with non-monetary relief
+                  - Closed with monetary relief
+                  - In progress
+                  - Untimely response
+                  - Closed
+                  - Closed with relief
+                  - Closed without relief
+                  - Unknown
+      - name: timely_flag
+        description: Company responded within 15 days.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [true, false]
+                quote: false
+      - name: disputed_flag
+        description: Always NULL; no current CFPB source publishes disputes (ADR 0005).
+      - name: submitted_via
+        description: Submission channel (degenerate attribute).
+      - name: days_to_company
+        description: Days from receipt to forwarding to the company.
+      - name: has_narrative
+        description: A consumer narrative exists in the archive for this complaint.
+        data_tests: [not_null]
+      - name: source_changed_at
+        description: Latest change time of the complaint or its narrative; the incremental watermark.
+        data_tests: [not_null]
