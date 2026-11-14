@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     database_url: str = Field(
-        default="postgresql://cw:cw@localhost:5432/complaints",
+        default="postgresql://cw:cw@localhost:5433/complaints",
         description="libpq connection string for the warehouse database.",
     )
     db_pool_min_size: int = Field(default=1, ge=0)
