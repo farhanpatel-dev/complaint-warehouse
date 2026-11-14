@@ -1,0 +1,22 @@
+product,product_family,is_current_name
+Credit reporting or other personal consumer reports,Credit reporting,true
+"Credit reporting, credit repair services, or other personal consumer reports",Credit reporting,false
+Credit reporting,Credit reporting,false
+Debt collection,Debt collection,true
+Debt or credit management,Debt and credit management,true
+Credit card,Credit cards,true
+Credit card or prepaid card,Credit cards,false
+Prepaid card,Prepaid cards,true
+Checking or savings account,Bank accounts,true
+Bank account or service,Bank accounts,false
+Mortgage,Mortgages,true
+Vehicle loan or lease,Vehicle and consumer loans,true
+Consumer Loan,Vehicle and consumer loans,false
+Student loan,Student loans,true
+"Payday loan, title loan, personal loan, or advance loan",Payday and personal loans,true
+"Payday loan, title loan, or personal loan",Payday and personal loans,false
+Payday loan,Payday and personal loans,false
+"Money transfer, virtual currency, or money service",Money transfers and crypto,true
+Money transfers,Money transfers and crypto,false
+Virtual currency,Money transfers and crypto,false
+Other financial service,Other financial services,false

@@ -1,0 +1,64 @@
+state_code,state_name,census_region,census_division,jurisdiction_type
+AL,Alabama,South,East South Central,State
+AK,Alaska,West,Pacific,State
+AZ,Arizona,West,Mountain,State
+AR,Arkansas,South,West South Central,State
+CA,California,West,Pacific,State
+CO,Colorado,West,Mountain,State
+CT,Connecticut,Northeast,New England,State
+DE,Delaware,South,South Atlantic,State
+DC,District of Columbia,South,South Atlantic,Federal district
+FL,Florida,South,South Atlantic,State
+GA,Georgia,South,South Atlantic,State
+HI,Hawaii,West,Pacific,State
+ID,Idaho,West,Mountain,State
+IL,Illinois,Midwest,East North Central,State
+IN,Indiana,Midwest,East North Central,State
+IA,Iowa,Midwest,West North Central,State
+KS,Kansas,Midwest,West North Central,State
+KY,Kentucky,South,East South Central,State
+LA,Louisiana,South,West South Central,State
+ME,Maine,Northeast,New England,State
+MD,Maryland,South,South Atlantic,State
+MA,Massachusetts,Northeast,New England,State
+MI,Michigan,Midwest,East North Central,State
+MN,Minnesota,Midwest,West North Central,State
+MS,Mississippi,South,East South Central,State
+MO,Missouri,Midwest,West North Central,State
+MT,Montana,West,Mountain,State
+NE,Nebraska,Midwest,West North Central,State
+NV,Nevada,West,Mountain,State
+NH,New Hampshire,Northeast,New England,State
+NJ,New Jersey,Northeast,Middle Atlantic,State
+NM,New Mexico,West,Mountain,State
+NY,New York,Northeast,Middle Atlantic,State
+NC,North Carolina,South,South Atlantic,State
+ND,North Dakota,Midwest,West North Central,State
+OH,Ohio,Midwest,East North Central,State
+OK,Oklahoma,South,West South Central,State
+OR,Oregon,West,Pacific,State
+PA,Pennsylvania,Northeast,Middle Atlantic,State
+RI,Rhode Island,Northeast,New England,State
+SC,South Carolina,South,South Atlantic,State
+SD,South Dakota,Midwest,West North Central,State
+TN,Tennessee,South,East South Central,State
+TX,Texas,South,West South Central,State
+UT,Utah,West,Mountain,State
+VT,Vermont,Northeast,New England,State
+VA,Virginia,South,South Atlantic,State
+WA,Washington,West,Pacific,State
+WV,West Virginia,South,South Atlantic,State
+WI,Wisconsin,Midwest,East North Central,State
+WY,Wyoming,West,Mountain,State
+PR,Puerto Rico,Territories,Territories,Territory
+GU,Guam,Territories,Territories,Territory
+VI,U.S. Virgin Islands,Territories,Territories,Territory
+AS,American Samoa,Territories,Territories,Territory
+MP,Northern Mariana Islands,Territories,Territories,Territory
+UM,U.S. Minor Outlying Islands,Territories,Territories,Territory
+FM,Federated States of Micronesia,Freely associated states,Freely associated states,Freely associated state
+MH,Marshall Islands,Freely associated states,Freely associated states,Freely associated state
+PW,Palau,Freely associated states,Freely associated states,Freely associated state
+AA,Armed Forces Americas,Military,Military,Military mail
+AE,Armed Forces Europe,Military,Military,Military mail
+AP,Armed Forces Pacific,Military,Military,Military mail
