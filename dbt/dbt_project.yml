@@ -1,0 +1,48 @@
+name: complaint_warehouse
+version: "0.1.0"
+config-version: 2
+profile: complaint_warehouse
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+target-path: target
+clean-targets: [target, dbt_packages]
+
+vars:
+  # dim_date spans the first CFPB complaint month to well past today.
+  date_spine_start: "2011-12-01"
+  date_spine_end: "2030-12-31"
+  # Narrative chunking for search.complaint_text. 200 words is about 260-280 word-piece
+  # tokens, under the 384-token window of the 768-dim sentence-transformers I evaluate.
+  chunk_words: 200
+  chunk_overlap_words: 40
+  embedding_dim: 768
+
+models:
+  complaint_warehouse:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: staging
+      +materialized: view
+    warehouse:
+      +schema: warehouse
+      +materialized: table
+    search:
+      +schema: search
+    marts:
+      +schema: marts
+      +materialized: materialized_view
+
+seeds:
+  complaint_warehouse:
+    +schema: reference
+
+data_tests:
+  complaint_warehouse:
+    +store_failures: false

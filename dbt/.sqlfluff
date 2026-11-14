@@ -1,0 +1,23 @@
+[sqlfluff]
+templater = jinja
+# Models in dbt conventionally use lowercase SQL; the root config's UPPER rule is for raw DDL.
+exclude_rules = ST06, RF04, AM04
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+
+# Stubs for project macros so the jinja templater can render models without a dbt connection.
+[sqlfluff:templater:jinja:macros]
+hash_key = {% macro hash_key(columns) %}1::bigint{% endmacro %}
+date_key = {% macro date_key(column) %}1{% endmacro %}
+unknown_key = {% macro unknown_key() %}-1::bigint{% endmacro %}
+cw_is_incremental = {% macro cw_is_incremental() %}{% endmacro %}
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.types]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower

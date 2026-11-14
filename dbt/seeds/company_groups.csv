@@ -1,0 +1,27 @@
+company_name,parent_group,industry
+Experian Information Solutions Inc.,Experian,Credit reporting agency
+"TRANSUNION INTERMEDIATE HOLDINGS, INC.",TransUnion,Credit reporting agency
+"EQUIFAX, INC.",Equifax,Credit reporting agency
+LEXISNEXIS,LexisNexis,Specialty consumer reporting
+CAPITAL ONE FINANCIAL CORPORATION,Capital One,Bank
+JPMORGAN CHASE & CO.,JPMorgan Chase,Bank
+"BANK OF AMERICA, NATIONAL ASSOCIATION",Bank of America,Bank
+"CITIBANK, N.A.",Citigroup,Bank
+WELLS FARGO & COMPANY,Wells Fargo,Bank
+U.S. BANCORP,U.S. Bancorp,Bank
+ALLY FINANCIAL INC.,Ally Financial,Bank
+BARCLAYS BANK DELAWARE,Barclays,Bank
+SYNCHRONY FINANCIAL,Synchrony,Card issuer
+AMERICAN EXPRESS COMPANY,American Express,Card issuer
+NAVY FEDERAL CREDIT UNION,Navy Federal,Credit union
+ENCORE CAPITAL GROUP INC.,Encore Capital Group,Debt buyer or collector
+"Portfolio Recovery Associates, LLC",PRA Group,Debt buyer or collector
+Resurgent Capital Services L.P.,Resurgent Capital Services,Debt buyer or collector
+"I.C. System, Inc.",I.C. System,Debt buyer or collector
+"CAINE & WEINER COMPANY, INC.",Caine & Weiner,Debt buyer or collector
+"Block, Inc.",Block,Payments and fintech
+"Paypal Holdings, Inc",PayPal,Payments and fintech
+Chime Financial Inc,Chime,Payments and fintech
+"Affirm Holdings, Inc",Affirm,Payments and fintech
+"Fidelity National Information Services, Inc. (FNIS)",FIS,Payments and fintech
+MOHELA,MOHELA,Student loan servicer

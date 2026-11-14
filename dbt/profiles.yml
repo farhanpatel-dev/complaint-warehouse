@@ -1,0 +1,13 @@
+complaint_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_HOST', 'localhost') }}"
+      port: "{{ env_var('DBT_PORT', '5433') | as_number }}"
+      user: "{{ env_var('POSTGRES_USER', 'cw') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', 'cw') }}"
+      dbname: "{{ env_var('POSTGRES_DB', 'complaints') }}"
+      schema: warehouse
+      threads: 4
+      connect_timeout: 10

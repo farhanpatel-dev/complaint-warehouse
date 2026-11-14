@@ -1,0 +1,92 @@
+version: 2
+
+models:
+  - name: stg_cfpb__complaints
+    description: One row per CFPB complaint, typed and cleaned. Natural keys for dimensions are never NULL.
+    columns:
+      - name: complaint_id
+        description: CFPB complaint identifier (source primary key).
+        data_tests: [unique, not_null]
+      - name: date_received
+        description: Date the CFPB received the complaint.
+        data_tests: [not_null]
+      - name: company_name
+        description: Company named in the complaint, whitespace-normalised; 'Unknown' if missing.
+        data_tests: [not_null]
+      - name: product
+        description: CFPB product name exactly as published (taxonomy varies by era).
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('product_taxonomy')
+                field: product
+              config:
+                severity: warn
+      - name: sub_product
+        description: CFPB sub-product; '(none)' when the product has no sub-product.
+        data_tests: [not_null]
+      - name: state_code
+        description: Two-letter postal code; '--' when missing or unparseable.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('us_states')
+                field: state_code
+              config:
+                severity: warn
+                where: "state_code <> '--'"
+      - name: zip_code
+        description: Five-digit ZIP, CFPB-masked ZIP3 form ('391XX'), or '-----' when missing.
+        data_tests: [not_null]
+      - name: response_type
+        description: Company response to the consumer.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Closed with explanation
+                  - Closed with non-monetary relief
+                  - Closed with monetary relief
+                  - In progress
+                  - Untimely response
+                  - Closed
+                  - Closed with relief
+                  - Closed without relief
+                  - Unknown
+      - name: submitted_via
+        description: Channel the consumer used.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Web, Referral, Phone, Postal mail, Fax, Email, Web Referral]
+              config:
+                severity: warn
+      - name: timely_flag
+        description: True if the company responded within the CFPB's 15-day window.
+      - name: disputed_flag
+        description: >
+          Consumer disputed the response. The CFPB stopped collecting disputes in 2017 and no
+          current source publishes the column, so this is NULL (see ADR 0005).
+      - name: days_to_company
+        description: Days between receipt and forwarding to the company.
+      - name: last_changed_at
+        description: When the raw row last changed; drives incremental models.
+        data_tests: [not_null]
+
+  - name: stg_cfpb__narratives
+    description: Consumer narratives with whitespace normalised and a redaction-free variant for search.
+    columns:
+      - name: complaint_id
+        data_tests:
+          - unique
+          - not_null
+      - name: narrative
+        description: Narrative as published (CFPB redactions like XXXX retained).
+        data_tests: [not_null]
+      - name: narrative_clean
+        description: Narrative with redaction tokens removed; input to chunking, full-text and embeddings.
+      - name: narrative_chars
+        description: Character length of the narrative.

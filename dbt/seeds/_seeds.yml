@@ -1,0 +1,42 @@
+version: 2
+
+seeds:
+  - name: us_states
+    description: >
+      Two-letter postal codes that appear in CFPB complaints, with US Census region and
+      division. Territories, freely associated states and military mail codes get their own
+      region so they never fall silently into "Unknown".
+    config:
+      column_types:
+        state_code: char(2)
+    columns:
+      - name: state_code
+        data_tests: [unique, not_null]
+      - name: census_region
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [Northeast, Midwest, South, West, Territories, Freely associated states, Military]
+
+  - name: product_taxonomy
+    description: >
+      Maps every product name the CFPB has used, current and retired, to a stable
+      product_family so trends survive the CFPB's taxonomy revisions. Changing a family here
+      creates a new version in snap_product, which is how dim_product keeps SCD Type 2 history.
+    columns:
+      - name: product
+        data_tests: [unique, not_null]
+      - name: product_family
+        data_tests: [not_null]
+
+  - name: company_groups
+    description: >
+      Analyst-curated parent group and industry for the highest-volume companies. Companies
+      not listed default to parent_group = company_name and industry = 'Unclassified'. Edits
+      here are versioned by snap_company (SCD Type 2 on dim_company).
+    columns:
+      - name: company_name
+        data_tests: [unique, not_null]
+      - name: industry
+        data_tests: [not_null]

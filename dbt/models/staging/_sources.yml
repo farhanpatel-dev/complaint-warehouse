@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: cfpb
+    schema: raw
+    description: Tables landed by the Python ingestion job (`python -m complaint_warehouse.ingest`).
+    tables:
+      - name: complaints
+        description: >
+          Latest version of every complaint from the CFPB search API or bulk CSV. Upserted by
+          complaint_id; last_changed_at only moves when the business fields change.
+        loaded_at_field: last_changed_at
+        freshness:
+          warn_after: {count: 3, period: day}
+          error_after: {count: 10, period: day}
+        columns:
+          - name: complaint_id
+            data_tests: [unique, not_null]
+          - name: date_received
+            data_tests: [not_null]
+
+      - name: complaint_narratives
+        description: >
+          Consumer narratives from the CFPB FOIA Narratives Archive (Dec 2011 - 2026-08-14).
+          Frozen, so it has no freshness check.
+        columns:
+          - name: complaint_id
+            data_tests: [unique, not_null]
+          - name: narrative
+            data_tests: [not_null]
