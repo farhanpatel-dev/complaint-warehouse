@@ -4,7 +4,7 @@ SHELL := /bin/bash
 COMPOSE ?= docker compose
 RUN     := $(COMPOSE) run --rm app
 
-.PHONY: help up down reset logs psql install lint format test test-integration ingest dbt embed bench
+.PHONY: help up down reset logs psql install lint format test test-integration ingest ingest-bulk ingest-narratives ingest-status dbt embed bench
 
 help: ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -33,12 +33,12 @@ install: ## Install the package with dev extras and pre-commit hooks
 lint: ## Run ruff, black --check and sqlfluff
 	ruff check .
 	black --check .
-	sqlfluff lint db sql
+	sqlfluff lint db sql src
 
 format: ## Auto-format Python and SQL
 	ruff check --fix .
 	black .
-	sqlfluff fix db sql
+	sqlfluff fix db sql src
 
 test: ## Run unit tests
 	pytest -m "not integration"
@@ -46,9 +46,18 @@ test: ## Run unit tests
 test-integration: ## Run tests that need the database (make up first)
 	pytest -m integration
 
-# --- pipeline (implemented in later phases) ---------------------------------
-ingest: ## Load CFPB complaints into raw (phase 2)
-	$(RUN) python -m complaint_warehouse.ingest $(ARGS)
+# --- pipeline ---------------------------------------------------------------
+ingest: ## Incremental API load from the watermark (ARGS="--start 2026-10-01" to override)
+	$(RUN) python -m complaint_warehouse.ingest api $(ARGS)
+
+ingest-bulk: ## Backfill raw.complaints from the bulk CSV (ARGS="--start 2023-01-01")
+	$(RUN) python -m complaint_warehouse.ingest bulk $(ARGS)
+
+ingest-narratives: ## Load narratives from the CFPB archive (ARGS="--start 2025-01-01")
+	$(RUN) python -m complaint_warehouse.ingest narratives $(ARGS)
+
+ingest-status: ## Show watermark, row counts and recent load runs
+	$(RUN) python -m complaint_warehouse.ingest status
 
 dbt: ## Build and test dbt models (phase 3)
 	$(RUN) bash -c "cd dbt && dbt deps && dbt build"

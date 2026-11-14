@@ -21,7 +21,7 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: ruff check .
       - run: black --check .
-      - run: sqlfluff lint db sql
+      - run: sqlfluff lint db sql src
 
   test:
     runs-on: ubuntu-latest

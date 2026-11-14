@@ -2,8 +2,9 @@
 dialect = postgres
 templater = jinja
 max_line_length = 120
-# LT05 (line length) is handled by max_line_length; ST06 (column order) fights readable SELECTs.
-exclude_rules = ST06
+# ST06 (column order) fights readable SELECTs. RF04 flags non-reserved words such as
+# `source` and `status`, which are ordinary column names in Postgres.
+exclude_rules = ST06, RF04
 
 [sqlfluff:indentation]
 indent_unit = space
