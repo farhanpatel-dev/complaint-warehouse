@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: mv_company_monthly
+    description: Materialized view. Company x month complaint volume, timeliness and outcomes, using current company attributes.
+    columns:
+      - name: month
+        data_tests: [not_null]
+      - name: company_name
+        data_tests: [not_null]
+      - name: complaints
+        data_tests: [not_null]
+      - name: timely_rate
+        description: Share of complaints answered within 15 days (0-1).
+
+  - name: mv_product_monthly
+    description: Materialized view. Product family x product x month volume and outcomes.
+    columns:
+      - name: month
+        data_tests: [not_null]
+      - name: product_family
+        data_tests: [not_null]
+
+  - name: mv_state_monthly
+    description: Materialized view. State x month volume, timeliness and vulnerable-population tags.
+    columns:
+      - name: month
+        data_tests: [not_null]
+      - name: state_code
+        data_tests: [not_null]
+
+  - name: mv_daily_volume
+    description: Materialized view. Daily counts per company and product family; input to rolling-rate and anomaly queries.
+    columns:
+      - name: date_received
+        data_tests: [not_null]
+      - name: complaints
+        data_tests: [not_null]
