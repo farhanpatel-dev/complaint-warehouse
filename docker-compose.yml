@@ -34,24 +34,47 @@ services:
       retries: 20
     shm_size: 1gb
 
+  # API server. `make up` starts this and db.
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    <<: &app-common
+      build:
+        context: .
+        dockerfile: Dockerfile
+      image: complaint-warehouse-app
+      env_file:
+        - path: .env
+          required: false
+      environment:
+        DATABASE_URL: postgresql://${POSTGRES_USER:-cw}:${POSTGRES_PASSWORD:-cw}@db:5432/${POSTGRES_DB:-complaints}
+        POSTGRES_USER: ${POSTGRES_USER:-cw}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cw}
+        POSTGRES_DB: ${POSTGRES_DB:-complaints}
+        DBT_HOST: db
+        DBT_PORT: "5432"
+        DBT_PROFILES_DIR: /app/dbt
+      depends_on:
+        db:
+          condition: service_healthy
+      volumes:
+        - ./data:/app/data
+        - ./dbt:/app/dbt
+        - hf-cache:/root/.cache/huggingface
     container_name: cw-app
-    env_file:
-      - path: .env
-        required: false
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-cw}:${POSTGRES_PASSWORD:-cw}@db:5432/${POSTGRES_DB:-complaints}
     ports:
       - "${API_PORT:-8000}:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - ./data:/app/data
-      - hf-cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Batch jobs (ingest, dbt, embed, bench) via `docker compose run --rm worker ...`.
+  # Same image as app, but no published port and no HTTP healthcheck: a job container
+  # runs no web server. The `jobs` profile keeps `docker compose up` from starting it.
+  worker:
+    <<: *app-common
+    profiles: ["jobs"]
+    command: ["true"]
 
 volumes:
   pgdata:

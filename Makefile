@@ -2,9 +2,9 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
 COMPOSE ?= docker compose
-RUN     := $(COMPOSE) run --rm app
+RUN     := $(COMPOSE) run --rm worker
 
-.PHONY: help up down reset logs psql install lint format test test-integration ingest ingest-bulk ingest-narratives ingest-status dbt embed bench
+.PHONY: help up down reset logs psql install lint format test test-integration ingest ingest-bulk ingest-narratives ingest-status dbt dbt-docs dbt-fresh embed bench
 
 help: ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -33,12 +33,12 @@ install: ## Install the package with dev extras and pre-commit hooks
 lint: ## Run ruff, black --check and sqlfluff
 	ruff check .
 	black --check .
-	sqlfluff lint db sql src
+	sqlfluff lint db sql src dbt/models dbt/tests
 
 format: ## Auto-format Python and SQL
 	ruff check --fix .
 	black .
-	sqlfluff fix db sql src
+	sqlfluff fix db sql src dbt/models dbt/tests
 
 test: ## Run unit tests
 	pytest -m "not integration"
@@ -59,8 +59,14 @@ ingest-narratives: ## Load narratives from the CFPB archive (ARGS="--start 2025-
 ingest-status: ## Show watermark, row counts and recent load runs
 	$(RUN) python -m complaint_warehouse.ingest status
 
-dbt: ## Build and test dbt models (phase 3)
-	$(RUN) bash -c "cd dbt && dbt deps && dbt build"
+dbt: ## Seed, snapshot, build and test all dbt models
+	$(RUN) bash -c "cd dbt && dbt deps --quiet && dbt build $(ARGS)"
+
+dbt-fresh: ## Check source freshness of raw tables
+	$(RUN) bash -c "cd dbt && dbt source freshness"
+
+dbt-docs: ## Generate dbt docs and serve them on http://localhost:8081
+	$(COMPOSE) run --rm -p 8081:8081 worker bash -c "cd dbt && dbt docs generate && dbt docs serve --host 0.0.0.0 --port 8081 --no-browser"
 
 embed: ## Chunk and embed complaint narratives (phase 4)
 	$(RUN) python -m complaint_warehouse.embed $(ARGS)
