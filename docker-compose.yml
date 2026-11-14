@@ -1,0 +1,58 @@
+name: complaint-warehouse
+
+services:
+  db:
+    image: pgvector/pgvector:0.8.0-pg16
+    container_name: cw-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-complaints}
+      POSTGRES_USER: ${POSTGRES_USER:-cw}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cw}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    # Tuned for a laptop running analytics + vector index builds.
+    # maintenance_work_mem matters most: HNSW/IVFFlat builds spill to disk without it.
+    command:
+      - postgres
+      - -c
+      - shared_buffers=512MB
+      - -c
+      - maintenance_work_mem=1GB
+      - -c
+      - work_mem=64MB
+      - -c
+      - max_parallel_maintenance_workers=2
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    shm_size: 1gb
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cw-app
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cw}:${POSTGRES_PASSWORD:-cw}@db:5432/${POSTGRES_DB:-complaints}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - hf-cache:/root/.cache/huggingface
+
+volumes:
+  pgdata:
+  hf-cache:
