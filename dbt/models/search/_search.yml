@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: complaint_text
+    description: >
+      Narrative chunks for hybrid search. One row per (complaint_id, chunk_no): overlapping
+      200-word windows of the redaction-free narrative, with a tsvector for full-text search
+      and a 768-dim embedding filled by the embedding job.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [complaint_id, chunk_no]
+    columns:
+      - name: complaint_id
+        description: FK to fact_complaint / raw narrative.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_cfpb__narratives')
+                field: complaint_id
+      - name: chunk_no
+        description: 0-based chunk position within the narrative.
+        data_tests: [not_null]
+      - name: narrative
+        description: Chunk text (redaction tokens removed).
+        data_tests: [not_null]
+      - name: tsv
+        description: to_tsvector('english', narrative); GIN-indexed.
+        data_tests: [not_null]
+      - name: embedding
+        description: Sentence embedding, vector(768); NULL until the embedding job processes the chunk.
+      - name: embedding_model
+        description: Model id that produced the embedding (lets a model change be detected and re-run).
+      - name: embedded_at
+        description: When the embedding was written.
+      - name: source_changed_at
+        description: last_changed_at of the source narrative; the incremental watermark.
