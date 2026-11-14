@@ -7,6 +7,16 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- dbt project with staging views, a star schema (`fact_complaint`, `dim_company`, `dim_product`,
+  `dim_date`, `dim_geo`), `search.complaint_text` chunks and four dashboard materialized views.
+- `partitioned_incremental` custom materialization: monthly range-partitioned fact table with
+  automatic partition creation and delete+insert loads.
+- SCD Type 2 for companies and products using dbt snapshots over curated reference seeds,
+  plus an `scd2_valid_windows` generic test (no gaps or overlaps, one current version).
+- Deterministic 64-bit hash surrogate keys and unknown-member rows in every dimension.
+- dbt tests (unique, not_null, relationships, accepted_values, singular row-count and
+  unknown-member checks), source freshness, and dbt docs.
+- CI job that ingests a real CFPB fixture sample and runs `dbt build` twice (full, then incremental).
 - Ingestion job (`python -m complaint_warehouse.ingest`) with three CFPB sources: incremental
   search-API loads (per-day windows, `search_after` paging, watermark with 30-day lookback),
   bulk CSV backfill, and the FOIA Narratives Archive.
