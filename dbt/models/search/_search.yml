@@ -36,3 +36,26 @@ models:
         description: When the embedding was written.
       - name: source_changed_at
         description: last_changed_at of the source narrative; the incremental watermark.
+
+  - name: complaint_facets
+    description: >
+      One row per complaint with a narrative: the attributes search filters on and displays
+      (date, company, product and current product family, issue, state, response). Unpartitioned
+      and keyed on complaint_id, so search avoids probing every monthly partition of the fact.
+    columns:
+      - name: complaint_id
+        description: Complaint id; one row per complaint that has a narrative.
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_cfpb__narratives')
+                field: complaint_id
+      - name: date_received
+        data_tests: [not_null]
+      - name: product_family
+        description: Family from the current product taxonomy (stable across CFPB renames).
+        data_tests: [not_null]
+      - name: company_name
+        data_tests: [not_null]
