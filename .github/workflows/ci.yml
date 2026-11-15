@@ -54,14 +54,14 @@ jobs:
             PGPASSWORD=cw psql -h localhost -U cw -d complaints -v ON_ERROR_STOP=1 -f "$f"
           done
       - name: Unit tests
-        run: pytest -m "not integration" --cov=complaint_warehouse --cov-report=term-missing
+        run: pytest -m "not integration and not e2e" --cov=complaint_warehouse --cov-report=term-missing
       - name: Integration tests
         run: pytest -m integration
 
   dbt:
-    # End-to-end on a real CFPB sample: ingest the fixture zips with the real CLI, then build
-    # every dbt node twice. The second build exercises the incremental paths (partitioned
-    # fact, complaint_text) and must still pass all tests.
+    # End-to-end on a real CFPB sample: ingest the fixture zips with the real CLI, build every
+    # dbt node twice (the second build exercises the incremental paths), embed the chunks on
+    # CPU with the real model, then run the search tests against the result.
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -82,13 +82,22 @@ jobs:
       DBT_HOST: localhost
       DBT_PORT: "5432"
       DBT_PROFILES_DIR: ${{ github.workspace }}/dbt
+      EMBEDDING_DEVICE: cpu
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -e ".[dbt]"
+      - name: Install (CPU torch first, so the embed extra does not pull a CUDA build)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,dbt,embed]"
+      - name: Cache the embedding model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-BAAI-bge-base-en-v1.5
       - name: Initialise database
         run: |
           for f in db/init/*.sql; do
@@ -110,6 +119,12 @@ jobs:
       - name: dbt docs generate
         working-directory: dbt
         run: dbt docs generate
+      - name: Embed fixture chunks
+        run: python -m complaint_warehouse.embed run
+      - name: Embedding rerun is a no-op
+        run: python -m complaint_warehouse.embed run | tee rerun.txt && grep -q "embedded=0 " rerun.txt
+      - name: Search end-to-end tests
+        run: pytest -m e2e
 
   docker:
     runs-on: ubuntu-latest

@@ -68,4 +68,5 @@ testpaths = ["tests"]
 addopts = "-ra"
 markers = [
     "integration: tests that need a running Postgres (set DATABASE_URL)",
+    "e2e: tests that need the dbt-built search tables, embeddings and the real model",
 ]

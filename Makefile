@@ -8,7 +8,7 @@ ifeq ($(GPU),1)
 endif
 RUN     := $(COMPOSE) run --rm worker
 
-.PHONY: help up down reset logs psql install lint format test test-integration ingest ingest-bulk ingest-narratives ingest-status dbt dbt-docs dbt-fresh embed embed-status bench
+.PHONY: help up down reset logs psql install lint format test test-integration test-e2e ingest ingest-bulk ingest-narratives ingest-status dbt dbt-docs dbt-fresh embed embed-status bench
 
 help: ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -45,10 +45,13 @@ format: ## Auto-format Python and SQL
 	sqlfluff fix db sql src dbt/models dbt/tests
 
 test: ## Run unit tests
-	pytest -m "not integration"
+	pytest -m "not integration and not e2e"
 
 test-integration: ## Run tests that need the database (make up first)
 	pytest -m integration
+
+test-e2e: ## Run search tests against the built warehouse with the real model
+	pytest -m e2e
 
 # --- pipeline ---------------------------------------------------------------
 ingest: ## Incremental API load from the watermark (ARGS="--start 2026-10-01" to override)
