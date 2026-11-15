@@ -47,6 +47,25 @@ class Settings(BaseSettings):
     http_timeout_seconds: float = Field(default=60.0, gt=0)
     http_max_retries: int = Field(default=5, ge=0)
 
+    # --- embeddings -----------------------------------------------------------
+    embedding_model: str = Field(
+        default="BAAI/bge-base-en-v1.5",
+        description="Sentence-transformers model id; must output embedding_dim dimensions.",
+    )
+    embedding_dim: int = Field(default=768, ge=1)
+    embedding_device: str = Field(default="auto", description="auto, cpu, cuda or cuda:N")
+    embedding_batch_size: int = Field(
+        default=128, ge=1, description="Texts per forward pass on the device."
+    )
+    embedding_fetch_size: int = Field(
+        default=2048, ge=1, description="Chunks read, embedded and committed per checkpoint."
+    )
+    embedding_max_seq_length: int = Field(default=512, ge=8)
+    embedding_query_instruction: str = Field(
+        default="Represent this sentence for searching relevant passages: ",
+        description="Prefix bge models expect on queries (not on documents).",
+    )
+
 
 @lru_cache
 def get_settings() -> Settings:
