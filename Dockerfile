@@ -11,10 +11,16 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
+# torch first, from the index that matches the hardware. The default CPU build keeps the
+# image small for CI and the API; docker-compose.gpu.yml rebuilds with a CUDA 12.8 build,
+# the first that supports RTX 50-series (Blackwell) GPUs.
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+RUN pip install torch --index-url "${TORCH_INDEX_URL}"
+
 # Install dependencies first so code changes don't bust the layer cache.
 COPY pyproject.toml README.md ./
 COPY src ./src
-RUN pip install ".[dbt]"
+RUN pip install ".[dbt,embed]"
 
 COPY . .
 

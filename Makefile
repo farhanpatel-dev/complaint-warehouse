@@ -2,9 +2,13 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
 COMPOSE ?= docker compose
+# GPU=1 runs batch jobs in the CUDA build of the image (docker-compose.gpu.yml).
+ifeq ($(GPU),1)
+  COMPOSE += -f docker-compose.yml -f docker-compose.gpu.yml
+endif
 RUN     := $(COMPOSE) run --rm worker
 
-.PHONY: help up down reset logs psql install lint format test test-integration ingest ingest-bulk ingest-narratives ingest-status dbt dbt-docs dbt-fresh embed bench
+.PHONY: help up down reset logs psql install lint format test test-integration ingest ingest-bulk ingest-narratives ingest-status dbt dbt-docs dbt-fresh embed embed-status bench
 
 help: ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -68,8 +72,11 @@ dbt-fresh: ## Check source freshness of raw tables
 dbt-docs: ## Generate dbt docs and serve them on http://localhost:8081
 	$(COMPOSE) run --rm -p 8081:8081 worker bash -c "cd dbt && dbt docs generate && dbt docs serve --host 0.0.0.0 --port 8081 --no-browser"
 
-embed: ## Chunk and embed complaint narratives (phase 4)
-	$(RUN) python -m complaint_warehouse.embed $(ARGS)
+embed: ## Embed pending narrative chunks, resuming from the checkpoint (GPU=1, ARGS="--limit 20000")
+	$(RUN) python -m complaint_warehouse.embed run $(ARGS)
+
+embed-status: ## Show embedded/pending chunk counts and checkpoints
+	$(RUN) python -m complaint_warehouse.embed status
 
 bench: ## Run index and search-quality benchmarks (phase 6)
 	$(RUN) python -m complaint_warehouse.bench $(ARGS)
