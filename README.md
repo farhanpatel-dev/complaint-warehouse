@@ -64,10 +64,28 @@ flowchart LR
 | Search | `search` | `complaint_text`: 200-word overlapping chunks, `tsvector`, `vector(768)` |
 | Marts | `marts` | `mv_company_monthly`, `mv_product_monthly`, `mv_state_monthly`, `mv_daily_volume` |
 
+## Embeddings
+
+`python -m complaint_warehouse.embed run` fills `search.complaint_text.embedding` with
+`BAAI/bge-base-en-v1.5` vectors (768-d, L2-normalised). The job is resumable: each batch's
+vectors and its checkpoint (`ops.embedding_checkpoints`) commit in one transaction, so a crash
+or Ctrl+C loses at most one batch and a rerun carries on from the last committed key. Writes
+run on a separate thread, overlapped with encoding. Vectors only land if the chunk text is
+unchanged since it was read, and the job refuses to mix models in one column.
+
+```bash
+make embed GPU=1 ARGS="--limit 20000"   # time a sample on the GPU build
+make embed GPU=1                        # embed everything pending
+make embed-status                       # counts per model + checkpoint
+```
+
+On my RTX 5050 laptop GPU it runs at about 360 chunks/s and is GPU-bound. The model choice
+and the measurements are in [ADR 0006](docs/adr/0006-embedding-model-and-batch-job.md).
+
 ## Repository layout
 
 ```
-src/complaint_warehouse/   Python package: config, db helpers, ingest/, API (embed/bench in later phases)
+src/complaint_warehouse/   Python package: config, db helpers, ingest/, embed/, API (bench in phase 6)
 db/init/                   SQL run on first Postgres start (extensions + schemas)
 dbt/                       dbt project: staging, star schema, search chunks, marts, tests
 sql/                       analytics SQL library (phase 6)
