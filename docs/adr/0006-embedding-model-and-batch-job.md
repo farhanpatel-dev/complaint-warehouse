@@ -65,6 +65,19 @@ up around the 4th decimal place, and fp16 roughly doubles throughput.
 | batch 256, fetch 8192 | 276 chunks/s | too few batches to overlap; more padding |
 
 The 128/2048 and 64/2048 results are within run-to-run noise, so I kept 128/2048.
+
+**Full run (2026-11-15):** 5,490,151 chunks in 4 h 03 min (376 chunks/s), after about 96k
+chunks from the sample runs above. Over the whole run the main loop waited 10 s on writes,
+and the stale-text guard skipped 0 chunks. Afterwards all 5,595,687 chunks had a vector, the
+checkpoint read `complete`, and the table had grown from 6.8 GB to 8.3 GB of heap plus
+23 GB of TOAST for the vectors. A `VACUUM (ANALYZE)` took 3.5 min and cleared the 0.97M
+dead tuples the update pass left behind.
+
+As a sanity check I ran exact (unindexed) nearest-neighbour search for two paraphrased
+queries. Both returned on-topic complaints with cosine similarity of about 0.80, matched by
+meaning rather than shared words ("calling my workplace" found "called my place of
+employment"). Each query scanned all 5.6M vectors in 86–119 s, which is the baseline the
+phase 6 index study has to beat.
 Overlapping writes gave about +30%. Past that, the GPU is the limit.
 
 I also considered dropping the GIN and partial indexes during the backfill and rebuilding
