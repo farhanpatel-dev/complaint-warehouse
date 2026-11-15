@@ -7,6 +7,13 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- Embedding job (`python -m complaint_warehouse.embed`) using `BAAI/bge-base-en-v1.5`: keyset
+  walk over pending chunks, a checkpoint committed atomically with each batch, writes overlapped
+  with GPU encoding, a stale-text guard, and a single-model-per-column safety check.
+- `ops.embedding_checkpoints` table, plus `embed status` and `embed reset` commands.
+- CUDA 12.8 build of the image via `docker-compose.gpu.yml` (`make embed GPU=1`); the default
+  image ships CPU torch.
+- ADR 0006: embedding model choice and batch job design, with measured throughput.
 - dbt project with staging views, a star schema (`fact_complaint`, `dim_company`, `dim_product`,
   `dim_date`, `dim_geo`), `search.complaint_text` chunks and four dashboard materialized views.
 - `partitioned_incremental` custom materialization: monthly range-partitioned fact table with

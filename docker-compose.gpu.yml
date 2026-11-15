@@ -1,0 +1,17 @@
+# GPU override for batch jobs: `make embed GPU=1`, or
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml run --rm worker ...
+# Needs an NVIDIA driver and Docker GPU support (Docker Desktop on WSL2, or the NVIDIA
+# Container Toolkit on Linux).
+services:
+  worker:
+    build:
+      args:
+        TORCH_INDEX_URL: https://download.pytorch.org/whl/cu128
+    image: complaint-warehouse-app:gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
