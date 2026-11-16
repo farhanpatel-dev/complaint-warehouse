@@ -61,6 +61,14 @@ class Settings(BaseSettings):
         default=2048, ge=1, description="Chunks read, embedded and committed per checkpoint."
     )
     embedding_max_seq_length: int = Field(default=512, ge=8)
+    # --- search API -----------------------------------------------------------
+    search_statement_timeout_ms: int = Field(
+        default=30_000, ge=0, description="Per-statement timeout for API queries (0 = none)."
+    )
+    search_preload_model: bool = Field(
+        default=True, description="Load the embedding model at API startup, not on first query."
+    )
+
     embedding_query_instruction: str = Field(
         default="Represent this sentence for searching relevant passages: ",
         description="Prefix bge models expect on queries (not on documents).",

@@ -7,6 +7,14 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- `search.hybrid_search` SQL function: keyword (`ts_rank_cd`) and semantic (pgvector cosine)
+  arms fused with Reciprocal Rank Fusion; mode weights, in-arm filters, inlinable, created by
+  a dbt `on-run-end` hook (`dbt run-operation install_search_functions` to reinstall).
+- `search.complaint_facets` dbt model: unpartitioned per-complaint lookup for filters and display.
+- `GET /search` FastAPI endpoint (hybrid / keyword / semantic, filters, snippets, timings),
+  a statement timeout that maps to 504, and model preloading at startup.
+- End-to-end search tests (`pytest -m e2e`); CI now embeds the fixture sample on CPU and runs them.
+- ADR 0002: hybrid search with RRF, with measured query plans.
 - Embedding job (`python -m complaint_warehouse.embed`) using `BAAI/bge-base-en-v1.5`: keyset
   walk over pending chunks, a checkpoint committed atomically with each batch, writes overlapped
   with GPU encoding, a stale-text guard, and a single-model-per-column safety check.

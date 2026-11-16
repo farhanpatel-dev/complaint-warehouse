@@ -82,10 +82,32 @@ make embed-status                       # counts per model + checkpoint
 On my RTX 5050 laptop GPU it runs at about 360 chunks/s and is GPU-bound. The model choice
 and the measurements are in [ADR 0006](docs/adr/0006-embedding-model-and-batch-job.md).
 
+## Hybrid search
+
+`search.hybrid_search` fuses a full-text arm (`ts_rank_cd` over a GIN index) and a semantic
+arm (pgvector cosine distance) with Reciprocal Rank Fusion, in one inlinable SQL function
+made of CTEs. FastAPI exposes it at `GET /search`:
+
+```bash
+curl -G localhost:8000/search   --data-urlencode "q=bank charged me twice for one purchase"   --data-urlencode "mode=hybrid" --data-urlencode "k=5"   --data-urlencode "date_from=2025-03-01" --data-urlencode "product_family=Credit cards"
+```
+
+`mode` is `hybrid`, `keyword` or `semantic`. A mode sets the arm weights, and a weight of 0
+means the arm is never executed. Filters (`date_from`, `date_to`, `product_family`,
+`company`, `state`) apply inside each arm before its LIMIT. Each hit carries both arm ranks,
+the cosine similarity, its complaint attributes and a highlighted snippet of its best chunk.
+The design and the query plans behind it are in
+[ADR 0002](docs/adr/0002-hybrid-search-rrf.md).
+
+Until the phase 6 vector index exists, an unfiltered semantic or hybrid search is an exact
+scan of 5.6M vectors (about 100 s) and returns 504 at the 30 s statement timeout. Keyword
+search (92 ms) and filtered hybrid search (about 1 s for a month and a product family) are
+already interactive.
+
 ## Repository layout
 
 ```
-src/complaint_warehouse/   Python package: config, db helpers, ingest/, embed/, API (bench in phase 6)
+src/complaint_warehouse/   Python package: config, db helpers, ingest/, embed/, search/, API (bench in phase 6)
 db/init/                   SQL run on first Postgres start (extensions + schemas)
 dbt/                       dbt project: staging, star schema, search chunks, marts, tests
 sql/                       analytics SQL library (phase 6)
