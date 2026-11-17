@@ -1,0 +1,23 @@
+Limit  (cost=54437.54..54449.21 rows=100 width=8) (actual time=430.357..449.323 rows=100 loops=1)
+  Buffers: shared hit=40819
+  ->  Gather Merge  (cost=54437.54..68095.02 rows=117056 width=8) (actual time=430.355..449.314 rows=100 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=40819
+        ->  Sort  (cost=53437.51..53583.83 rows=58528 width=8) (actual time=425.122..425.126 rows=80 loops=3)
+              Sort Key: (ts_rank_cd(t.tsv, '''bank'' | ''put'' | ''hold'' | ''deposit'' | ''won'' | ''releas'' | ''money'''::tsquery)) DESC, t.id
+              Sort Method: top-N heapsort  Memory: 31kB
+              Buffers: shared hit=40819
+              Worker 0:  Sort Method: top-N heapsort  Memory: 30kB
+              Worker 1:  Sort Method: top-N heapsort  Memory: 30kB
+              ->  Parallel Bitmap Heap Scan on chunk_vectors t  (cost=1042.69..51200.62 rows=58528 width=8) (actual time=33.186..418.238 rows=38668 loops=3)
+                    Recheck Cond: (tsv @@ '''bank'' | ''put'' | ''hold'' | ''deposit'' | ''won'' | ''releas'' | ''money'''::tsquery)
+                    Heap Blocks: exact=15100
+                    Buffers: shared hit=40789
+                    ->  Bitmap Index Scan on bench_gin_tsv  (cost=0.00..1007.58 rows=140468 width=0) (actual time=31.894..31.894 rows=116005 loops=1)
+                          Index Cond: (tsv @@ '''bank'' | ''put'' | ''hold'' | ''deposit'' | ''won'' | ''releas'' | ''money'''::tsquery)
+                          Buffers: shared hit=65
+Planning:
+  Buffers: shared hit=1
+Planning Time: 0.301 ms
+Execution Time: 449.372 ms

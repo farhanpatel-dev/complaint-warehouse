@@ -81,7 +81,52 @@ the arm weights.
 - The API's statement timeout (30 s, `SEARCH_STATEMENT_TIMEOUT_MS`) turns a too-broad
   search into a 504 with an explanation, instead of letting it tie up the database.
 - `websearch_to_tsquery` ANDs every term, so long natural-language queries often get no
-  keyword hits, and hybrid then degrades to semantic-only. The phase 6 evaluation measures
-  this against OR semantics before I change it.
+  keyword hits, and hybrid then degrades to semantic-only. Phase 6 measured OR matching
+  (`keyword_match = 'any'`) against it; see the evaluation below. AND stays the default.
 - The function is created by a dbt `on-run-end` hook, versioned with the tables it reads.
   `dbt run-operation install_search_functions` reinstalls it without a rebuild.
+
+## Evaluation (phase 6)
+
+`python -m complaint_warehouse.bench quality`. Full results are in
+`bench/results/search_quality.md`.
+
+- **Setup:** 52 queries written as a consumer would phrase them. Each is labelled with the
+  CFPB issue and sub-issue it describes; the labels are the consumers' own choices, not my
+  judgement of the results. The window is 2019: 124,843 complaints with narratives, and
+  every arm is exact.
+
+| system | nDCG@10 | recall@10 | MRR@10 | no results |
+|---|---|---|---|---|
+| keyword, AND | 0.149 | 0.104 | 0.363 | 21 of 52 |
+| keyword, OR | 0.199 | 0.167 | 0.319 | 0 |
+| semantic | 0.564 | 0.506 | 0.728 | 0 |
+| hybrid, AND (default) | 0.563 | 0.496 | **0.801** | 0 |
+| hybrid, OR | 0.442 | 0.392 | 0.598 | 0 |
+
+What I take from it, with paired bootstrap 95% CIs on nDCG@10:
+
+- **Hybrid with AND ties semantic on nDCG** (−0.0005, CI [−0.036, +0.035]). It puts the
+  first relevant complaint higher (MRR 0.80 vs 0.73), and it costs nothing on this set. Each
+  arm can only add candidates, and RRF promotes complaints both arms agree on.
+- **OR matching makes hybrid worse** (−0.121, CI [−0.175, −0.065], 38 of 52 queries lose).
+  An OR query matches about half of all chunks. `ts_rank_cd` then promotes chunks that repeat
+  common words such as "account" or "money", and RRF gives that noise as much weight as the
+  semantic ranks. OR helps keyword-only search a little (+0.049, CI includes 0) but not the
+  fusion. It is also slow: it has to rank half the corpus.
+- **RRF settings barely matter.** Across rrf_k ∈ {1…200} and keyword weights 0.25–2, hybrid
+  with AND stays within 0.533–0.582 nDCG@10. The best cell (k = 200, keyword weight 0.5,
+  0.582) is about 0.02 above the default. That is inside the noise of 52 queries and was
+  chosen on those same queries, so I kept k = 60 and equal weights.
+- **The query set favours semantic search.** The queries are paraphrases and the labels are
+  topics, so this measures "find complaints about this kind of problem", which is semantic
+  search's strength. Keyword search earns its place on exact terms (company names, product
+  names, statutes, "Zelle"), which this set does not test. That is the main reason hybrid
+  is the default rather than semantic-only.
+
+The evaluation also exposed a planning bug. The tsquery CTE was materialized, so the planner
+could not see it and assumed 0.5% of chunks match. For OR queries, which match about 50%, it
+chose a GIN plan that ran up to 471 s with 11 GB of temp files. With `NOT MATERIALIZED`, the
+immutable two-argument `websearch_to_tsquery` folds to a constant after inlining, and the
+planner estimates from statistics. The same OR query filtered to 2019 then takes 5.4 s,
+while AND queries keep their GIN plans.

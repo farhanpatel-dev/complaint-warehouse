@@ -1,0 +1,73 @@
+Limit  (cost=60277.09..60277.22 rows=50 width=164) (actual time=839.674..839.696 rows=14 loops=1)
+  Buffers: shared hit=249028
+  CTE bounds
+    ->  Result  (cost=0.58..0.59 rows=1 width=4) (actual time=0.038..0.043 rows=1 loops=1)
+          Buffers: shared hit=5
+          InitPlan 1 (returns $0)
+            ->  Limit  (cost=0.55..0.58 rows=1 width=4) (actual time=0.035..0.037 rows=1 loops=1)
+                  Buffers: shared hit=5
+                  ->  Index Only Scan Backward using a37d69d7bd1fc190f28710939a96a648 on mv_daily_volume  (cost=0.55..42909.88 rows=1593033 width=4) (actual time=0.034..0.035 rows=1 loops=1)
+                        Index Cond: (date_received IS NOT NULL)
+                        Heap Fetches: 0
+                        Buffers: shared hit=5
+  CTE company_daily
+    ->  HashAggregate  (cost=39432.26..41423.55 rows=159303 width=61) (actual time=400.132..458.741 rows=152850 loops=1)
+          Group Key: v.date_received, v.company_name
+          Batches: 1  Memory Usage: 34833kB
+          Buffers: shared hit=249019
+          ->  Nested Loop  (cost=0.56..35449.68 rows=531011 width=37) (actual time=0.018..270.783 rows=246928 loops=1)
+                Buffers: shared hit=249019
+                ->  CTE Scan on bounds b_2  (cost=0.00..0.02 rows=1 width=4) (actual time=0.000..0.003 rows=1 loops=1)
+                ->  Index Scan using a37d69d7bd1fc190f28710939a96a648 on mv_daily_volume v  (cost=0.56..30139.55 rows=531011 width=37) (actual time=0.015..244.434 rows=246928 loops=1)
+                      Index Cond: (date_received > (b_2.last_day - 393))
+                      Buffers: shared hit=249019
+  ->  Sort  (cost=18852.95..18857.76 rows=1923 width=164) (actual time=839.671..839.681 rows=14 loops=1)
+        Sort Key: (round(((s.complaints - s.mean_28d) / NULLIF(s.stddev_28d, '0'::numeric)), 1)) DESC, s.date_day, s.company_name
+        Sort Method: quicksort  Memory: 26kB
+        Buffers: shared hit=249028
+        ->  Nested Loop  (cost=16337.05..18789.07 rows=1923 width=164) (actual time=723.974..839.635 rows=14 loops=1)
+              Join Filter: (s.date_day > (b.last_day - 365))
+              Rows Removed by Join Filter: 22
+              Buffers: shared hit=249028
+              ->  CTE Scan on bounds b  (cost=0.00..0.02 rows=1 width=4) (actual time=0.041..0.042 rows=1 loops=1)
+                    Buffers: shared hit=5
+              ->  Subquery Scan on s  (cost=16337.05..18673.67 rows=5769 width=132) (actual time=723.236..839.536 rows=36 loops=1)
+                    Filter: ((s.complaints >= '20'::numeric) AND (((s.complaints - s.mean_28d) / NULLIF(s.stddev_28d, '0'::numeric)) >= '4'::numeric))
+                    Rows Removed by Filter: 54198
+                    Buffers: shared hit=249023
+                    ->  WindowAgg  (cost=16337.05..17505.36 rows=51925 width=132) (actual time=721.590..829.060 rows=54234 loops=1)
+                          Buffers: shared hit=249023
+                          ->  Sort  (cost=16337.05..16466.86 rows=51925 width=68) (actual time=721.576..734.682 rows=54234 loops=1)
+                                Sort Key: company_daily.company_name, d.date_day
+                                Sort Method: quicksort  Memory: 4781kB
+                                Buffers: shared hit=249023
+                                ->  Hash Right Join  (cost=5440.53..12270.24 rows=51925 width=68) (actual time=572.424..643.952 rows=54234 loops=1)
+                                      Hash Cond: ((c.date_received = d.date_day) AND (c.company_name = company_daily.company_name))
+                                      Buffers: shared hit=249023
+                                      ->  CTE Scan on company_daily c  (cost=0.00..3186.06 rows=159303 width=68) (actual time=0.002..11.438 rows=152850 loops=1)
+                                      ->  Hash  (cost=4661.66..4661.66 rows=51925 width=36) (actual time=572.335..572.341 rows=54234 loops=1)
+                                            Buckets: 65536  Batches: 1  Memory Usage: 3777kB
+                                            Buffers: shared hit=249023
+                                            ->  Nested Loop  (cost=3982.86..4661.66 rows=51925 width=36) (actual time=554.377..562.384 rows=54234 loops=1)
+                                                  Buffers: shared hit=249023
+                                                  ->  Nested Loop  (cost=0.29..26.86 rows=775 width=4) (actual time=0.015..0.120 rows=393 loops=1)
+                                                        Buffers: shared hit=4
+                                                        ->  CTE Scan on bounds b_1  (cost=0.00..0.02 rows=1 width=4) (actual time=0.000..0.002 rows=1 loops=1)
+                                                        ->  Index Only Scan using dim_date_date_idx on dim_date d  (cost=0.29..19.09 rows=775 width=4) (actual time=0.012..0.084 rows=393 loops=1)
+                                                              Index Cond: ((date_day > (b_1.last_day - 393)) AND (date_day <= b_1.last_day))
+                                                              Heap Fetches: 0
+                                                              Buffers: shared hit=4
+                                                  ->  Materialize  (cost=3982.58..3985.91 rows=67 width=32) (actual time=1.411..1.420 rows=138 loops=393)
+                                                        Buffers: shared hit=249019
+                                                        ->  HashAggregate  (cost=3982.58..3985.58 rows=67 width=32) (actual time=554.358..556.047 rows=138 loops=1)
+                                                              Group Key: company_daily.company_name
+                                                              Filter: (sum(company_daily.complaints) >= '1000'::numeric)
+                                                              Batches: 1  Memory Usage: 2273kB
+                                                              Rows Removed by Filter: 4102
+                                                              Buffers: shared hit=249019
+                                                              ->  CTE Scan on company_daily  (cost=0.00..3186.06 rows=159303 width=64) (actual time=400.133..508.365 rows=152850 loops=1)
+                                                                    Buffers: shared hit=249019
+Planning:
+  Buffers: shared hit=1
+Planning Time: 0.342 ms
+Execution Time: 851.381 ms

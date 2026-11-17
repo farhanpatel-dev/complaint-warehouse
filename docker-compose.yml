@@ -26,13 +26,21 @@ services:
       - -c
       - max_parallel_maintenance_workers=2
       - -c
+      # SSD storage: the default 4.0 models spinning disks and made a broad filtered search
+      # (one year, 131k complaints) pick a 64 s sequential scan over a 1.6 s index nested
+      # loop. Measured in phase 6, see docs/adr/0004-hnsw-parameters.md.
+      - random_page_cost=1.1
+      - -c
       - shared_preload_libraries=pg_stat_statements
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 20
-    shm_size: 1gb
+    # Parallel index builds (and parallel vacuum) put maintenance_work_mem in shared memory,
+    # so /dev/shm must be larger than the biggest maintenance_work_mem a build will SET.
+    # The phase 6 HNSW builds use 2GB.
+    shm_size: 3gb
 
   # API server. `make up` starts this and db.
   app:
@@ -58,6 +66,8 @@ services:
       volumes:
         - ./data:/app/data
         - ./dbt:/app/dbt
+        - ./bench:/app/bench
+        - ./sql:/app/sql
         - hf-cache:/root/.cache/huggingface
     container_name: cw-app
     ports:

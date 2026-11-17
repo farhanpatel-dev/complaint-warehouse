@@ -1,0 +1,42 @@
+Sort  (cost=6854.96..6872.79 rows=7132 width=187) (actual time=13.100..13.119 rows=202 loops=1)
+  Sort Key: (rank() OVER (?)), totals.company_name
+  Sort Method: quicksort  Memory: 50kB
+  Buffers: shared hit=572
+  ->  WindowAgg  (cost=5524.84..6398.51 rows=7132 width=187) (actual time=12.833..13.022 rows=202 loops=1)
+        Buffers: shared hit=572
+        ->  Sort  (cost=5524.84..5542.67 rows=7132 width=143) (actual time=12.800..12.819 rows=202 loops=1)
+              Sort Key: (((((totals.timely / totals.complaints) + (3.8416 / ('2'::numeric * totals.complaints))) - (1.96 * sqrt(((((totals.timely / totals.complaints) * ('1'::numeric - (totals.timely / totals.complaints))) / totals.complaints) + (3.8416 / (('4'::numeric * totals.complaints) * totals.complaints)))))) / ('1'::numeric + (3.8416 / totals.complaints)))) DESC
+              Sort Method: quicksort  Memory: 46kB
+              Buffers: shared hit=572
+              ->  WindowAgg  (cost=4586.98..5068.39 rows=7132 width=143) (actual time=12.668..12.758 rows=202 loops=1)
+                    Buffers: shared hit=572
+                    ->  Sort  (cost=4586.98..4604.81 rows=7132 width=135) (actual time=12.662..12.680 rows=202 loops=1)
+                          Sort Key: totals.industry, (((((totals.timely / totals.complaints) + (3.8416 / ('2'::numeric * totals.complaints))) - (1.96 * sqrt(((((totals.timely / totals.complaints) * ('1'::numeric - (totals.timely / totals.complaints))) / totals.complaints) + (3.8416 / (('4'::numeric * totals.complaints) * totals.complaints)))))) / ('1'::numeric + (3.8416 / totals.complaints)))) DESC
+                          Sort Method: quicksort  Memory: 45kB
+                          Buffers: shared hit=572
+                          ->  Subquery Scan on totals  (cost=3417.33..4130.53 rows=7132 width=135) (actual time=11.268..12.522 rows=202 loops=1)
+                                Buffers: shared hit=572
+                                ->  HashAggregate  (cost=3417.33..3791.76 rows=7132 width=103) (actual time=11.254..12.025 rows=202 loops=1)
+                                      Group Key: m.company_name, m.industry
+                                      Filter: (sum(m.complaints) >= '500'::numeric)
+                                      Batches: 1  Memory Usage: 2833kB
+                                      Rows Removed by Filter: 3986
+                                      Buffers: shared hit=572
+                                      ->  Nested Loop  (cost=0.87..3179.60 rows=23773 width=55) (actual time=0.039..5.463 rows=21963 loops=1)
+                                            Buffers: shared hit=572
+                                            ->  Result  (cost=0.44..0.45 rows=1 width=4) (actual time=0.022..0.025 rows=1 loops=1)
+                                                  Buffers: shared hit=4
+                                                  InitPlan 1 (returns $0)
+                                                    ->  Limit  (cost=0.42..0.44 rows=1 width=4) (actual time=0.019..0.022 rows=1 loops=1)
+                                                          Buffers: shared hit=4
+                                                          ->  Index Only Scan Backward using ed349e6da3839a81180c2f167d107c4e on mv_company_monthly  (cost=0.42..5292.78 rows=213958 width=4) (actual time=0.019..0.020 rows=1 loops=1)
+                                                                Index Cond: (month IS NOT NULL)
+                                                                Heap Fetches: 0
+                                                                Buffers: shared hit=4
+                                            ->  Index Scan using ed349e6da3839a81180c2f167d107c4e on mv_company_monthly m  (cost=0.42..2941.41 rows=23773 width=59) (actual time=0.013..3.293 rows=21963 loops=1)
+                                                  Index Cond: ((month >= (($0) - '1 year'::interval)) AND (month < ($0)))
+                                                  Buffers: shared hit=568
+Planning:
+  Buffers: shared hit=1
+Planning Time: 0.396 ms
+Execution Time: 13.289 ms

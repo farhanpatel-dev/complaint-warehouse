@@ -7,6 +7,16 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- Benchmark harness (`python -m complaint_warehouse.bench`, `make bench ARGS=...`): vector index
+  study (HNSW / IVFFlat, `vector` / `halfvec`, exact baseline, client-side exact ground truth),
+  GIN keyword study, labelled search-quality evaluation (nDCG, capped recall, MRR, paired
+  bootstrap, RRF sensitivity) and analytics timings; JSON results with generated Markdown.
+- 52 labelled evaluation queries (`bench/queries/eval_queries.toml`) graded by CFPB issue and
+  sub-issue labels.
+- Analytics SQL library (`sql/analytics/`): rolling 30-day timely rate, z-score anomalies,
+  Wilson-ranked timely-response league table, company cohorts, YoY and YTD trends.
+- `keyword_match` (`all` | `any`) parameter on `search.hybrid_search` and `GET /search`.
+
 - `search.hybrid_search` SQL function: keyword (`ts_rank_cd`) and semantic (pgvector cosine)
   arms fused with Reciprocal Rank Fusion; mode weights, in-arm filters, inlinable, created by
   a dbt `on-run-end` hook (`dbt run-operation install_search_functions` to reinstall).
@@ -48,4 +58,10 @@ All notable changes to this project are documented here. The format follows
 - Makefile, `.env.example`, pre-commit (ruff, black, sqlfluff), pytest suite and GitHub Actions CI.
 
 ### Changed
+- Postgres `random_page_cost` set to 1.1 (SSD): a search filtered to one year chose a 64 s
+  sequential scan over a 1.6 s index nested loop with the default of 4.
+- The tsquery CTE in `search.hybrid_search` is `NOT MATERIALIZED`, so the planner estimates
+  matches from statistics. An OR query had run for up to 471 s on a 0.5% default estimate.
+- Postgres `shm_size` raised to 3 GB so parallel index builds can use 2 GB of
+  `maintenance_work_mem`.
 - The Postgres host port defaults to 5433 to avoid clashing with a local Postgres.

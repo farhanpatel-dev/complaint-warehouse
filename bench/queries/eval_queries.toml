@@ -1,0 +1,398 @@
+# Labelled queries for the search-quality evaluation (python -m complaint_warehouse.bench quality).
+#
+# Ground truth comes from the CFPB's own metadata, not from my judgement of the results:
+# when consumers file a complaint they pick a product, an issue and a sub-issue. Each query
+# is written the way a consumer might phrase that problem, deliberately not copying the
+# category wording, and is labelled with the category it describes. Within the window:
+#
+#   grade 2  same product family, issue and sub-issue (or same issue, if it has no sub-issues)
+#   grade 1  same product family and issue, different sub-issue
+#   grade 0  everything else
+#
+# The labels are noisy (a consumer can pick a nearby category, and one complaint can
+# describe several problems), but the noise is the same for every retrieval method, so the
+# comparison between methods is fair. Absolute scores are a lower bound.
+#
+# Every label below has at least 100 complaints with a narrative in the window.
+
+[window]
+date_from = 2019-01-01
+date_to = 2019-12-31
+
+# --- Bank accounts ----------------------------------------------------------------------
+
+[[query]]
+id = "bank-deposit-hold"
+text = "bank put a hold on my deposit and won't release the money"
+product_family = "Bank accounts"
+issue = "Managing an account"
+sub_issue = "Deposits and withdrawals"
+
+[[query]]
+id = "bank-unauthorized-withdrawal"
+text = "someone took money out of my checking account without my permission"
+product_family = "Bank accounts"
+issue = "Problem with a lender or other company charging your account"
+sub_issue = "Transaction was not authorized"
+
+[[query]]
+id = "bank-debit-card-declined"
+text = "my debit card keeps getting declined at the ATM even though there is money in the account"
+product_family = "Bank accounts"
+issue = "Managing an account"
+sub_issue = "Problem using a debit or ATM card"
+
+[[query]]
+id = "bank-overdraft-fees"
+text = "charged several overdraft fees on the same day for small purchases"
+product_family = "Bank accounts"
+issue = "Problem caused by your funds being low"
+sub_issue = "Overdrafts and overdraft fees"
+
+[[query]]
+id = "bank-closed-account"
+text = "the bank shut down my checking account with no warning or explanation"
+product_family = "Bank accounts"
+issue = "Closing an account"
+sub_issue = "Company closed your account"
+
+[[query]]
+id = "bank-closed-balance-not-returned"
+text = "my account was closed weeks ago and I still haven't gotten a check for the remaining balance"
+product_family = "Bank accounts"
+issue = "Closing an account"
+sub_issue = "Funds not received from closed account"
+
+[[query]]
+id = "bank-signup-bonus"
+text = "never received the cash bonus promised for opening a new checking account"
+product_family = "Bank accounts"
+issue = "Opening an account"
+sub_issue = "Didn't receive terms that were advertised"
+
+[[query]]
+id = "bank-fraud-account-opened"
+text = "an identity thief opened a bank account in my name"
+product_family = "Bank accounts"
+issue = "Opening an account"
+sub_issue = "Account opened as a result of fraud"
+
+[[query]]
+id = "bank-wont-cash-check"
+text = "bank refused to cash a check made out to me"
+product_family = "Bank accounts"
+issue = "Managing an account"
+sub_issue = "Cashing a check"
+
+# --- Credit cards -----------------------------------------------------------------------
+
+[[query]]
+id = "card-dispute-merchant"
+text = "card issuer sided with the merchant on my dispute for an order that never arrived"
+product_family = "Credit cards"
+issue = "Problem with a purchase shown on your statement"
+sub_issue = "Credit card company isn't resolving a dispute about a purchase on your statement"
+
+[[query]]
+id = "card-charges-not-mine"
+text = "there are charges on my credit card statement that I did not make"
+product_family = "Credit cards"
+issue = "Problem with a purchase shown on your statement"
+sub_issue = "Card was charged for something you did not purchase with the card"
+
+[[query]]
+id = "card-annual-fee"
+text = "they charged me an annual fee after telling me it would be waived"
+product_family = "Credit cards"
+issue = "Fees or interest"
+sub_issue = "Problem with fees"
+
+[[query]]
+id = "card-apr-increase"
+text = "my credit card interest rate went up without any notice"
+product_family = "Credit cards"
+issue = "Fees or interest"
+sub_issue = "Unexpected increase in interest rate"
+
+[[query]]
+id = "card-closed-inactivity"
+text = "credit card account was closed because I hadn't used it"
+product_family = "Credit cards"
+issue = "Closing your account"
+sub_issue = "Company closed your account"
+
+[[query]]
+id = "card-rewards-lost"
+text = "rewards points disappeared from my credit card account"
+product_family = "Credit cards"
+issue = "Other features, terms, or problems"
+sub_issue = "Problem with rewards from credit card"
+
+[[query]]
+id = "card-intro-apr"
+text = "they promised zero percent intro APR but charged me interest anyway"
+product_family = "Credit cards"
+issue = "Advertising and marketing, including promotional offers"
+sub_issue = "Didn't receive advertised or promotional terms"
+
+[[query]]
+id = "card-identity-theft"
+text = "someone used my identity to open a credit card"
+product_family = "Credit cards"
+issue = "Getting a credit card"
+sub_issue = "Card opened as result of identity theft or fraud"
+
+[[query]]
+id = "card-application-denied"
+text = "my application for a credit card was rejected and I don't understand why"
+product_family = "Credit cards"
+issue = "Getting a credit card"
+sub_issue = "Application denied"
+
+[[query]]
+id = "card-unsolicited"
+text = "received a credit card in the mail that I never applied for"
+product_family = "Credit cards"
+issue = "Getting a credit card"
+sub_issue = "Sent card you never applied for"
+
+[[query]]
+id = "card-credit-limit"
+text = "card company refuses to raise my credit limit"
+product_family = "Credit cards"
+issue = "Trouble using your card"
+sub_issue = "Credit card company won't increase or decrease your credit limit"
+
+# --- Credit reporting -------------------------------------------------------------------
+
+[[query]]
+id = "report-not-my-accounts"
+text = "there are accounts on my credit report that do not belong to me"
+product_family = "Credit reporting"
+issue = "Incorrect information on your report"
+sub_issue = "Information belongs to someone else"
+
+[[query]]
+id = "report-dispute-verified"
+text = "the credit bureau said the item was verified and refused to remove it after my dispute"
+product_family = "Credit reporting"
+issue = "Problem with a credit reporting company's investigation into an existing problem"
+sub_issue = "Their investigation did not fix an error on your report"
+
+[[query]]
+id = "report-hard-inquiries"
+text = "hard inquiries on my report that I never authorized"
+product_family = "Credit reporting"
+issue = "Improper use of your report"
+sub_issue = "Credit inquiries on your report that you don't recognize"
+
+[[query]]
+id = "report-wrong-address"
+text = "my credit file lists addresses and names that aren't mine"
+product_family = "Credit reporting"
+issue = "Incorrect information on your report"
+sub_issue = "Personal information incorrect"
+
+[[query]]
+id = "report-dispute-overdue"
+text = "my dispute has been pending for over a month with no answer"
+product_family = "Credit reporting"
+issue = "Problem with a credit reporting company's investigation into an existing problem"
+sub_issue = "Investigation took more than 30 days"
+
+[[query]]
+id = "report-deleted-item-returns"
+text = "a collection account that was deleted keeps reappearing on my credit report"
+product_family = "Credit reporting"
+issue = "Incorrect information on your report"
+sub_issue = "Old information reappears or never goes away"
+
+[[query]]
+id = "report-bankruptcy-public-record"
+text = "bankruptcy and judgment listed incorrectly in the public records section of my report"
+product_family = "Credit reporting"
+issue = "Incorrect information on your report"
+sub_issue = "Public record information inaccurate"
+
+[[query]]
+id = "report-security-freeze"
+text = "I can't place or lift a freeze on my credit file"
+product_family = "Credit reporting"
+issue = "Problem with fraud alerts or security freezes"
+sub_issue = ""
+
+[[query]]
+id = "report-free-annual"
+text = "unable to get my free yearly credit report online"
+product_family = "Credit reporting"
+issue = "Unable to get your credit report or credit score"
+sub_issue = "Problem getting your free annual credit report"
+
+[[query]]
+id = "report-monitoring-cancel"
+text = "cancelled my credit monitoring subscription but they keep billing me"
+product_family = "Credit reporting"
+issue = "Credit monitoring or identity theft protection services"
+sub_issue = "Problem canceling credit monitoring or identify theft protection service"
+
+# --- Debt collection --------------------------------------------------------------------
+
+[[query]]
+id = "debt-not-mine"
+text = "collector is trying to make me pay a debt that isn't mine"
+product_family = "Debt collection"
+issue = "Attempts to collect debt not owed"
+sub_issue = "Debt is not yours"
+
+[[query]]
+id = "debt-already-paid"
+text = "collection agency demands payment for a balance I already paid off"
+product_family = "Debt collection"
+issue = "Attempts to collect debt not owed"
+sub_issue = "Debt was paid"
+
+[[query]]
+id = "debt-repeated-calls"
+text = "debt collector calls me many times every day"
+product_family = "Debt collection"
+issue = "Communication tactics"
+sub_issue = "Frequent or repeated calls"
+
+[[query]]
+id = "debt-stop-contact"
+text = "I told the collector in writing to stop contacting me but they keep calling"
+product_family = "Debt collection"
+issue = "Communication tactics"
+sub_issue = "You told them to stop contacting you, but they keep trying"
+
+[[query]]
+id = "debt-threatened-arrest"
+text = "collector said I would be arrested if I didn't pay"
+product_family = "Debt collection"
+issue = "Took or threatened to take negative or legal action"
+sub_issue = "Threatened to arrest you or take you to jail if you do not pay"
+
+[[query]]
+id = "debt-called-employer"
+text = "debt collector called my job and told my boss about my debt"
+product_family = "Debt collection"
+issue = "Threatened to contact someone or share information improperly"
+sub_issue = "Contacted your employer"
+
+[[query]]
+id = "debt-fake-lawyer"
+text = "the caller pretended to be from a law firm or the sheriff's office"
+product_family = "Debt collection"
+issue = "False statements or representation"
+sub_issue = "Impersonated attorney, law enforcement, or government official"
+
+[[query]]
+id = "debt-discharged-bankruptcy"
+text = "they are collecting on a debt that was wiped out in my bankruptcy"
+product_family = "Debt collection"
+issue = "Attempts to collect debt not owed"
+sub_issue = "Debt was already discharged in bankruptcy and is no longer owed"
+
+[[query]]
+id = "debt-no-validation"
+text = "they never sent a letter proving that I owe this debt"
+product_family = "Debt collection"
+issue = "Written notification about debt"
+sub_issue = "Didn't receive enough information to verify debt"
+
+[[query]]
+id = "debt-abusive-language"
+text = "the collector cursed and yelled at me on the phone"
+product_family = "Debt collection"
+issue = "Communication tactics"
+sub_issue = "Used obscene, profane, or other abusive language"
+
+# --- Mortgages --------------------------------------------------------------------------
+
+[[query]]
+id = "mortgage-misapplied-payments"
+text = "mortgage servicer misapplied my payments and then charged late fees"
+product_family = "Mortgages"
+issue = "Trouble during payment process"
+sub_issue = ""
+
+[[query]]
+id = "mortgage-modification-foreclosure"
+text = "my loan modification paperwork keeps getting lost and now I'm facing foreclosure"
+product_family = "Mortgages"
+issue = "Struggling to pay mortgage"
+sub_issue = ""
+
+[[query]]
+id = "mortgage-closing-delayed"
+text = "the lender delayed closing on my home purchase at the last minute"
+product_family = "Mortgages"
+issue = "Closing on a mortgage"
+sub_issue = ""
+
+[[query]]
+id = "mortgage-refinance-denied"
+text = "my refinance application was denied after the appraisal"
+product_family = "Mortgages"
+issue = "Applying for a mortgage or refinancing an existing mortgage"
+sub_issue = ""
+
+# --- Student loans ----------------------------------------------------------------------
+
+[[query]]
+id = "student-pslf-wrong-info"
+text = "servicer gave me wrong information about public service loan forgiveness"
+product_family = "Student loans"
+issue = "Dealing with your lender or servicer"
+sub_issue = "Received bad information about your loan"
+
+[[query]]
+id = "student-extra-payments"
+text = "extra payments on my student loan went to interest instead of principal"
+product_family = "Student loans"
+issue = "Dealing with your lender or servicer"
+sub_issue = "Trouble with how payments are being handled"
+
+[[query]]
+id = "student-income-driven"
+text = "can't get my student loan payment lowered on an income based plan"
+product_family = "Student loans"
+issue = "Struggling to repay your loan"
+sub_issue = "Problem lowering your monthly payments"
+
+# --- Vehicle loans, payday loans, money transfers ----------------------------------------
+
+[[query]]
+id = "auto-deficiency-balance"
+text = "my car was repossessed and sold and they say I still owe thousands"
+product_family = "Vehicle and consumer loans"
+issue = "Struggling to pay your loan"
+sub_issue = "Loan balance remaining after the vehicle is repossessed and sold"
+
+[[query]]
+id = "auto-title-not-released"
+text = "paid off my car loan months ago but never got the title"
+product_family = "Vehicle and consumer loans"
+issue = "Problems at the end of the loan or lease"
+sub_issue = "Unable to receive car title or other problem after the loan is paid off"
+
+[[query]]
+id = "transfer-scam"
+text = "a scammer tricked me into sending money through a payment app"
+product_family = "Money transfers and crypto"
+issue = "Fraud or scam"
+sub_issue = ""
+
+[[query]]
+id = "payday-unexpected-fees"
+text = "the payday lender charged far more interest and fees than I agreed to"
+product_family = "Payday and personal loans"
+issue = "Charged fees or interest you didn't expect"
+sub_issue = ""
+
+[[query]]
+id = "transfer-not-delivered"
+text = "the wire transfer I sent was not delivered when they promised"
+product_family = "Money transfers and crypto"
+issue = "Money was not available when promised"
+sub_issue = ""

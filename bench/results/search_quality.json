@@ -1,0 +1,2508 @@
+{
+  "environment": {
+    "measured_at": "2026-11-17T01:31:56+00:00",
+    "package_version": "0.1.0",
+    "postgres": "16.10 (Debian 16.10-1.pgdg12+1)",
+    "pgvector": "0.8.0",
+    "settings": {
+      "shared_buffers": "512MB",
+      "effective_cache_size": "4GB",
+      "work_mem": "64MB",
+      "maintenance_work_mem": "1GB",
+      "max_parallel_workers_per_gather": "2",
+      "max_parallel_maintenance_workers": "2",
+      "random_page_cost": "1.1",
+      "jit": "on"
+    },
+    "client": {
+      "python": "3.12.16",
+      "cpus": 16,
+      "mem_total": "7770292 kB",
+      "machine": "x86_64"
+    }
+  },
+  "window": {
+    "date_from": "2019-01-01",
+    "date_to": "2019-12-31",
+    "labelled_complaints": 124843
+  },
+  "queries": 52,
+  "candidates_per_arm": 100,
+  "model": "BAAI/bge-base-en-v1.5",
+  "summary": {
+    "keyword_all": {
+      "ndcg@10": 0.1493,
+      "recall@10": 0.1038,
+      "recall@100": 0.0363,
+      "mrr@10": 0.3625,
+      "returned": 16.3846,
+      "zero_results": 21,
+      "p50_ms": 387.7,
+      "p95_ms": 5389.3
+    },
+    "keyword_any": {
+      "ndcg@10": 0.1985,
+      "recall@10": 0.1673,
+      "recall@100": 0.1452,
+      "mrr@10": 0.319,
+      "returned": 87.0962,
+      "zero_results": 0,
+      "p50_ms": 1127.5,
+      "p95_ms": 60838.5
+    },
+    "semantic": {
+      "ndcg@10": 0.5637,
+      "recall@10": 0.5058,
+      "recall@100": 0.3915,
+      "mrr@10": 0.7278,
+      "returned": 96.3846,
+      "zero_results": 0,
+      "p50_ms": 1220.9,
+      "p95_ms": 8016.3
+    },
+    "hybrid_all": {
+      "ndcg@10": 0.5632,
+      "recall@10": 0.4962,
+      "recall@100": 0.3758,
+      "mrr@10": 0.8013,
+      "returned": 97.3077,
+      "zero_results": 0,
+      "p50_ms": 1389.5,
+      "p95_ms": 2230.6
+    },
+    "hybrid_any": {
+      "ndcg@10": 0.4424,
+      "recall@10": 0.3923,
+      "recall@100": 0.3092,
+      "mrr@10": 0.5981,
+      "returned": 100.0,
+      "zero_results": 0,
+      "p50_ms": 2073.6,
+      "p95_ms": 43477.6
+    }
+  },
+  "comparisons": {
+    "hybrid_any vs semantic": {
+      "mean_diff": -0.1213,
+      "ci95": [
+        -0.1702,
+        -0.0728
+      ],
+      "wins": 14,
+      "losses": 37,
+      "ties": 1
+    },
+    "hybrid_all vs semantic": {
+      "mean_diff": -0.0005,
+      "ci95": [
+        -0.0358,
+        0.035
+      ],
+      "wins": 14,
+      "losses": 16,
+      "ties": 22
+    },
+    "hybrid_any vs hybrid_all": {
+      "mean_diff": -0.1208,
+      "ci95": [
+        -0.1752,
+        -0.065
+      ],
+      "wins": 14,
+      "losses": 38,
+      "ties": 0
+    },
+    "keyword_any vs keyword_all": {
+      "mean_diff": 0.0492,
+      "ci95": [
+        -0.0288,
+        0.1263
+      ],
+      "wins": 29,
+      "losses": 18,
+      "ties": 5
+    },
+    "semantic vs keyword_any": {
+      "mean_diff": 0.3652,
+      "ci95": [
+        0.2965,
+        0.4363
+      ],
+      "wins": 48,
+      "losses": 4,
+      "ties": 0
+    }
+  },
+  "rrf_sweep": [
+    {
+      "keyword_match": "all",
+      "rrf_k": 1,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5744
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 1,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5677
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 1,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.5505
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 1,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.5446
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 10,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5722
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 10,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5759
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 10,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.5595
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 10,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.5328
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 30,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5716
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 30,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.577
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 30,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.5609
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 30,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.5391
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 60,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5758
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 60,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5807
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 60,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.5632
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 60,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.5424
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 100,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.576
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 100,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.581
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 100,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.5668
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 100,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.5445
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 200,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5789
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 200,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5818
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 200,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.5669
+    },
+    {
+      "keyword_match": "all",
+      "rrf_k": 200,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.5467
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 1,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5484
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 1,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.4938
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 1,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.4129
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 1,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.2988
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 10,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5621
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 10,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.562
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 10,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.4255
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 10,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.2286
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 30,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5572
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 30,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5538
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 30,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.436
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 30,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.2653
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 60,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5431
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 60,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5332
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 60,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.4424
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 60,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.3135
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 100,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5429
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 100,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5137
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 100,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.4447
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 100,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.3489
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 200,
+      "keyword_weight": 0.25,
+      "ndcg@10": 0.5187
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 200,
+      "keyword_weight": 0.5,
+      "ndcg@10": 0.5019
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 200,
+      "keyword_weight": 1.0,
+      "ndcg@10": 0.4438
+    },
+    {
+      "keyword_match": "any",
+      "rrf_k": 200,
+      "keyword_weight": 2.0,
+      "ndcg@10": 0.366
+    }
+  ],
+  "per_query": [
+    {
+      "id": "bank-deposit-hold",
+      "relevant": 1127,
+      "partial": 2893,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 2.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.18451145196513263,
+        "recall@10": 0.2,
+        "recall@100": 0.2,
+        "mrr@10": 0.16666666666666666,
+        "returned": 81.0
+      },
+      "semantic": {
+        "ndcg@10": 0.9368077570869662,
+        "recall@10": 0.9,
+        "recall@100": 0.72,
+        "mrr@10": 1.0,
+        "returned": 92.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.8376886041985098,
+        "recall@10": 0.8,
+        "recall@100": 0.72,
+        "mrr@10": 1.0,
+        "returned": 93.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6948831501974877,
+        "recall@10": 0.6,
+        "recall@100": 0.54,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-unauthorized-withdrawal",
+      "relevant": 715,
+      "partial": 164,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.01,
+        "mrr@10": 0.0,
+        "returned": 91.0
+      },
+      "semantic": {
+        "ndcg@10": 0.2645687300135905,
+        "recall@10": 0.3,
+        "recall@100": 0.1,
+        "mrr@10": 0.2,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.24639745374629812,
+        "recall@10": 0.3,
+        "recall@100": 0.1,
+        "mrr@10": 0.16666666666666666,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.022084741151463014,
+        "recall@10": 0.0,
+        "recall@100": 0.09,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-debit-card-declined",
+      "relevant": 701,
+      "partial": 3319,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.13,
+        "mrr@10": 1.0,
+        "returned": 86.0
+      },
+      "semantic": {
+        "ndcg@10": 0.37016274504174274,
+        "recall@10": 0.2,
+        "recall@100": 0.28,
+        "mrr@10": 1.0,
+        "returned": 93.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.37016274504174274,
+        "recall@10": 0.2,
+        "recall@100": 0.28,
+        "mrr@10": 1.0,
+        "returned": 93.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.4921438339662672,
+        "recall@10": 0.3,
+        "recall@100": 0.23,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-overdraft-fees",
+      "relevant": 387,
+      "partial": 193,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.4544982762213801,
+        "recall@10": 0.4,
+        "recall@100": 0.35,
+        "mrr@10": 1.0,
+        "returned": 84.0
+      },
+      "semantic": {
+        "ndcg@10": 0.8532721558012799,
+        "recall@10": 0.9,
+        "recall@100": 0.6,
+        "mrr@10": 0.5,
+        "returned": 92.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.8532721558012799,
+        "recall@10": 0.9,
+        "recall@100": 0.6,
+        "mrr@10": 0.5,
+        "returned": 92.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6163668470816235,
+        "recall@10": 0.7,
+        "recall@100": 0.58,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-closed-account",
+      "relevant": 359,
+      "partial": 586,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.03,
+        "mrr@10": 0.0,
+        "returned": 81.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.18707994135124265,
+        "recall@10": 0.1,
+        "recall@100": 0.05,
+        "mrr@10": 0.5,
+        "returned": 87.0
+      },
+      "semantic": {
+        "ndcg@10": 0.8400527367984127,
+        "recall@10": 0.7,
+        "recall@100": 0.41,
+        "mrr@10": 1.0,
+        "returned": 94.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5007857575125649,
+        "recall@10": 0.4,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.7264591246892943,
+        "recall@10": 0.6,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-closed-balance-not-returned",
+      "relevant": 263,
+      "partial": 682,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.024454640699786683,
+        "recall@10": 0.0,
+        "recall@100": 0.01,
+        "mrr@10": 0.0,
+        "returned": 84.0
+      },
+      "semantic": {
+        "ndcg@10": 0.5039627559949531,
+        "recall@10": 0.4,
+        "recall@100": 0.3,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5039627559949531,
+        "recall@10": 0.4,
+        "recall@100": 0.3,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.3506184072353609,
+        "recall@10": 0.2,
+        "recall@100": 0.19,
+        "mrr@10": 0.3333333333333333,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-signup-bonus",
+      "relevant": 439,
+      "partial": 447,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.42520843362602373,
+        "recall@10": 0.3,
+        "recall@100": 0.23,
+        "mrr@10": 1.0,
+        "returned": 83.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7827392871477701,
+        "recall@10": 0.8,
+        "recall@100": 0.63,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7827392871477701,
+        "recall@10": 0.8,
+        "recall@100": 0.63,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.8553475075669356,
+        "recall@10": 0.8,
+        "recall@100": 0.48,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-fraud-account-opened",
+      "relevant": 129,
+      "partial": 757,
+      "keyword_all": {
+        "ndcg@10": 0.07336392209936006,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 7.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.01,
+        "mrr@10": 0.0,
+        "returned": 81.0
+      },
+      "semantic": {
+        "ndcg@10": 0.07336392209936006,
+        "recall@10": 0.0,
+        "recall@100": 0.02,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.07336392209936006,
+        "recall@10": 0.0,
+        "recall@100": 0.02,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.046287481291184845,
+        "recall@10": 0.0,
+        "recall@100": 0.02,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "bank-wont-cash-check",
+      "relevant": 131,
+      "partial": 3889,
+      "keyword_all": {
+        "ndcg@10": 0.04927649697181754,
+        "recall@10": 0.0,
+        "recall@100": 0.03,
+        "mrr@10": 0.0,
+        "returned": 35.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.2683019340162545,
+        "recall@10": 0.3,
+        "recall@100": 0.11,
+        "mrr@10": 0.3333333333333333,
+        "returned": 88.0
+      },
+      "semantic": {
+        "ndcg@10": 0.49514669496311453,
+        "recall@10": 0.3,
+        "recall@100": 0.12,
+        "mrr@10": 0.5,
+        "returned": 94.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.2491451910774089,
+        "recall@10": 0.2,
+        "recall@100": 0.11,
+        "mrr@10": 0.2,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.2074797718168287,
+        "recall@10": 0.1,
+        "recall@100": 0.15,
+        "mrr@10": 0.1111111111111111,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-dispute-merchant",
+      "relevant": 1921,
+      "partial": 1018,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.35424542315054164,
+        "recall@10": 0.4,
+        "recall@100": 0.33,
+        "mrr@10": 0.5,
+        "returned": 89.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6123300505524961,
+        "recall@10": 0.5,
+        "recall@100": 0.5,
+        "mrr@10": 1.0,
+        "returned": 96.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6123300505524961,
+        "recall@10": 0.5,
+        "recall@100": 0.5,
+        "mrr@10": 1.0,
+        "returned": 96.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6416634414870346,
+        "recall@10": 0.6,
+        "recall@100": 0.43,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-charges-not-mine",
+      "relevant": 935,
+      "partial": 2004,
+      "keyword_all": {
+        "ndcg@10": 0.638036513635778,
+        "recall@10": 0.5,
+        "recall@100": 0.22,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.16,
+        "mrr@10": 0.0,
+        "returned": 88.0
+      },
+      "semantic": {
+        "ndcg@10": 0.06625422345438904,
+        "recall@10": 0.1,
+        "recall@100": 0.4,
+        "mrr@10": 0.1111111111111111,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.4974192162948035,
+        "recall@10": 0.4,
+        "recall@100": 0.33,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.17554440492323456,
+        "recall@10": 0.1,
+        "recall@100": 0.29,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-annual-fee",
+      "relevant": 969,
+      "partial": 520,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.6067216003536937,
+        "recall@10": 0.7,
+        "recall@100": 0.34,
+        "mrr@10": 0.5,
+        "returned": 89.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6020521034564037,
+        "recall@10": 0.5,
+        "recall@100": 0.4,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6020521034564037,
+        "recall@10": 0.5,
+        "recall@100": 0.4,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6149518506608846,
+        "recall@10": 0.6,
+        "recall@100": 0.42,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-apr-increase",
+      "relevant": 137,
+      "partial": 1352,
+      "keyword_all": {
+        "ndcg@10": 0.266379247589265,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 5.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.16006937327320508,
+        "recall@10": 0.1,
+        "recall@100": 0.04,
+        "mrr@10": 0.5,
+        "returned": 92.0
+      },
+      "semantic": {
+        "ndcg@10": 0.48329628553519793,
+        "recall@10": 0.4,
+        "recall@100": 0.3,
+        "mrr@10": 0.5,
+        "returned": 93.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.40514075646693004,
+        "recall@10": 0.2,
+        "recall@100": 0.3,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.47944836304824023,
+        "recall@10": 0.3,
+        "recall@100": 0.2,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-closed-inactivity",
+      "relevant": 681,
+      "partial": 229,
+      "keyword_all": {
+        "ndcg@10": 0.4537425745411855,
+        "recall@10": 0.3,
+        "recall@100": 0.03,
+        "mrr@10": 1.0,
+        "returned": 13.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.024454640699786683,
+        "recall@10": 0.0,
+        "recall@100": 0.12,
+        "mrr@10": 0.0,
+        "returned": 87.0
+      },
+      "semantic": {
+        "ndcg@10": 0.31516255047698366,
+        "recall@10": 0.3,
+        "recall@100": 0.48,
+        "mrr@10": 0.5,
+        "returned": 94.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5727555047321237,
+        "recall@10": 0.5,
+        "recall@100": 0.46,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.16815228646891087,
+        "recall@10": 0.2,
+        "recall@100": 0.32,
+        "mrr@10": 0.25,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-rewards-lost",
+      "relevant": 421,
+      "partial": 1269,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.06625422345438904,
+        "recall@10": 0.1,
+        "recall@100": 0.06,
+        "mrr@10": 0.1111111111111111,
+        "returned": 85.0
+      },
+      "semantic": {
+        "ndcg@10": 0.804810999209339,
+        "recall@10": 0.8,
+        "recall@100": 0.58,
+        "mrr@10": 1.0,
+        "returned": 93.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.804810999209339,
+        "recall@10": 0.8,
+        "recall@100": 0.58,
+        "mrr@10": 1.0,
+        "returned": 93.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.2761228178522952,
+        "recall@10": 0.3,
+        "recall@100": 0.39,
+        "mrr@10": 0.25,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-intro-apr",
+      "relevant": 553,
+      "partial": 368,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0999683438991648,
+        "recall@10": 0.0,
+        "recall@100": 0.02,
+        "mrr@10": 0.0,
+        "returned": 90.0
+      },
+      "semantic": {
+        "ndcg@10": 0.460664290384401,
+        "recall@10": 0.3,
+        "recall@100": 0.19,
+        "mrr@10": 1.0,
+        "returned": 87.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.460664290384401,
+        "recall@10": 0.3,
+        "recall@100": 0.19,
+        "mrr@10": 1.0,
+        "returned": 87.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.34619286652347003,
+        "recall@10": 0.1,
+        "recall@100": 0.13,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-identity-theft",
+      "relevant": 475,
+      "partial": 584,
+      "keyword_all": {
+        "ndcg@10": 0.09478836436955079,
+        "recall@10": 0.1,
+        "recall@100": 0.04,
+        "mrr@10": 0.25,
+        "returned": 56.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.04329167055111359,
+        "recall@10": 0.0,
+        "recall@100": 0.01,
+        "mrr@10": 0.0,
+        "returned": 89.0
+      },
+      "semantic": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.18,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.0636207881989517,
+        "recall@10": 0.1,
+        "recall@100": 0.13,
+        "mrr@10": 0.1,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.08,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-application-denied",
+      "relevant": 347,
+      "partial": 712,
+      "keyword_all": {
+        "ndcg@10": 0.17554440492323456,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 0.5,
+        "returned": 3.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.054513795540098775,
+        "recall@10": 0.0,
+        "recall@100": 0.06,
+        "mrr@10": 0.0,
+        "returned": 87.0
+      },
+      "semantic": {
+        "ndcg@10": 0.5684579545875156,
+        "recall@10": 0.6,
+        "recall@100": 0.46,
+        "mrr@10": 0.5,
+        "returned": 95.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5180294879462289,
+        "recall@10": 0.6,
+        "recall@100": 0.47,
+        "mrr@10": 0.3333333333333333,
+        "returned": 98.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.21298206765310917,
+        "recall@10": 0.2,
+        "recall@100": 0.31,
+        "mrr@10": 0.14285714285714285,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-unsolicited",
+      "relevant": 110,
+      "partial": 949,
+      "keyword_all": {
+        "ndcg@10": 0.28947775588037294,
+        "recall@10": 0.2,
+        "recall@100": 0.07,
+        "mrr@10": 0.5,
+        "returned": 99.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.13305201013572895,
+        "recall@10": 0.2,
+        "recall@100": 0.05,
+        "mrr@10": 0.125,
+        "returned": 90.0
+      },
+      "semantic": {
+        "ndcg@10": 0.4672410684588481,
+        "recall@10": 0.3,
+        "recall@100": 0.15,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.4904245355908655,
+        "recall@10": 0.3,
+        "recall@100": 0.13,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.4085359184257956,
+        "recall@10": 0.3,
+        "recall@100": 0.15,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "card-credit-limit",
+      "relevant": 212,
+      "partial": 340,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 2.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.09,
+        "mrr@10": 0.0,
+        "returned": 91.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7285344764549501,
+        "recall@10": 0.6,
+        "recall@100": 0.33,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7682573822617325,
+        "recall@10": 0.7,
+        "recall@100": 0.33,
+        "mrr@10": 1.0,
+        "returned": 98.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.46270962158308354,
+        "recall@10": 0.4,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-not-my-accounts",
+      "relevant": 17638,
+      "partial": 15707,
+      "keyword_all": {
+        "ndcg@10": 0.6207622843987102,
+        "recall@10": 0.5,
+        "recall@100": 0.53,
+        "mrr@10": 1.0,
+        "returned": 96.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.35940858709698914,
+        "recall@10": 0.4,
+        "recall@100": 0.33,
+        "mrr@10": 0.3333333333333333,
+        "returned": 85.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7799082337019199,
+        "recall@10": 0.9,
+        "recall@100": 0.91,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.914856882358379,
+        "recall@10": 0.9,
+        "recall@100": 0.83,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.5462574254588145,
+        "recall@10": 0.7,
+        "recall@100": 0.64,
+        "mrr@10": 0.3333333333333333,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-dispute-verified",
+      "relevant": 11345,
+      "partial": 4260,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.42492601381667106,
+        "recall@10": 0.3,
+        "recall@100": 0.29,
+        "mrr@10": 1.0,
+        "returned": 84.0
+      },
+      "semantic": {
+        "ndcg@10": 0.24282080697396935,
+        "recall@10": 0.1,
+        "recall@100": 0.12,
+        "mrr@10": 0.25,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3601842009904407,
+        "recall@10": 0.2,
+        "recall@100": 0.12,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.3591575982232225,
+        "recall@10": 0.4,
+        "recall@100": 0.21,
+        "mrr@10": 0.25,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-hard-inquiries",
+      "relevant": 4363,
+      "partial": 1406,
+      "keyword_all": {
+        "ndcg@10": 1.0,
+        "recall@10": 1.0,
+        "recall@100": 0.52,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.5501126236272345,
+        "recall@10": 0.6,
+        "recall@100": 0.44,
+        "mrr@10": 0.5,
+        "returned": 82.0
+      },
+      "semantic": {
+        "ndcg@10": 1.0,
+        "recall@10": 1.0,
+        "recall@100": 0.59,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.9052116356304492,
+        "recall@10": 0.9,
+        "recall@100": 0.57,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.8899541168509599,
+        "recall@10": 0.9,
+        "recall@100": 0.6,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-wrong-address",
+      "relevant": 1950,
+      "partial": 31395,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.23122115644785543,
+        "recall@10": 0.0,
+        "recall@100": 0.08,
+        "mrr@10": 0.0,
+        "returned": 87.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6237124829205983,
+        "recall@10": 0.6,
+        "recall@100": 0.32,
+        "mrr@10": 0.25,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5507771061071562,
+        "recall@10": 0.6,
+        "recall@100": 0.32,
+        "mrr@10": 0.2,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.3999499322723563,
+        "recall@10": 0.2,
+        "recall@100": 0.19,
+        "mrr@10": 0.125,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-dispute-overdue",
+      "relevant": 1611,
+      "partial": 13994,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 4.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.14346126924222904,
+        "recall@10": 0.1,
+        "recall@100": 0.07,
+        "mrr@10": 0.16666666666666666,
+        "returned": 83.0
+      },
+      "semantic": {
+        "ndcg@10": 0.5854744982288315,
+        "recall@10": 0.5,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 98.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3351719963264355,
+        "recall@10": 0.2,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.4094509821666416,
+        "recall@10": 0.3,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-deleted-item-returns",
+      "relevant": 1277,
+      "partial": 32068,
+      "keyword_all": {
+        "ndcg@10": 0.334657330095462,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 4.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.18402261973221337,
+        "recall@10": 0.0,
+        "recall@100": 0.06,
+        "mrr@10": 0.0,
+        "returned": 81.0
+      },
+      "semantic": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.07,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3009643847264146,
+        "recall@10": 0.1,
+        "recall@100": 0.08,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.07893580718239261,
+        "recall@10": 0.0,
+        "recall@100": 0.09,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-bankruptcy-public-record",
+      "relevant": 1261,
+      "partial": 32084,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.4926625085136295,
+        "recall@10": 0.2,
+        "recall@100": 0.26,
+        "mrr@10": 1.0,
+        "returned": 88.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7951657524814091,
+        "recall@10": 0.8,
+        "recall@100": 0.7,
+        "mrr@10": 1.0,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7951657524814091,
+        "recall@10": 0.8,
+        "recall@100": 0.7,
+        "mrr@10": 1.0,
+        "returned": 99.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.8922097294981223,
+        "recall@10": 0.8,
+        "recall@100": 0.57,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-security-freeze",
+      "relevant": 1251,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.11,
+        "mrr@10": 0.0,
+        "returned": 89.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.34996677795142095,
+        "recall@10": 0.3,
+        "recall@100": 0.17,
+        "mrr@10": 1.0,
+        "returned": 88.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6371130896657825,
+        "recall@10": 0.7,
+        "recall@100": 0.78,
+        "mrr@10": 0.5,
+        "returned": 97.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3636237070689246,
+        "recall@10": 0.4,
+        "recall@100": 0.47,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.5965173333990071,
+        "recall@10": 0.6,
+        "recall@100": 0.54,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-free-annual",
+      "relevant": 511,
+      "partial": 779,
+      "keyword_all": {
+        "ndcg@10": 0.650033222048579,
+        "recall@10": 0.7,
+        "recall@100": 0.07,
+        "mrr@10": 0.5,
+        "returned": 8.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.11,
+        "mrr@10": 0.0,
+        "returned": 98.0
+      },
+      "semantic": {
+        "ndcg@10": 1.0,
+        "recall@10": 1.0,
+        "recall@100": 0.91,
+        "mrr@10": 1.0,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.9052116356304492,
+        "recall@10": 0.9,
+        "recall@100": 0.91,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.7818048722226499,
+        "recall@10": 0.7,
+        "recall@100": 0.54,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "report-monitoring-cancel",
+      "relevant": 138,
+      "partial": 507,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.1478294909154526,
+        "recall@10": 0.2,
+        "recall@100": 0.02,
+        "mrr@10": 0.16666666666666666,
+        "returned": 89.0
+      },
+      "semantic": {
+        "ndcg@10": 0.3174320084403606,
+        "recall@10": 0.2,
+        "recall@100": 0.14,
+        "mrr@10": 0.5,
+        "returned": 96.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.4973743374751099,
+        "recall@10": 0.3,
+        "recall@100": 0.15,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.2906246349515899,
+        "recall@10": 0.2,
+        "recall@100": 0.1,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-not-mine",
+      "relevant": 5193,
+      "partial": 5824,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.19,
+        "mrr@10": 0.0,
+        "returned": 91.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7019727018777484,
+        "recall@10": 0.6,
+        "recall@100": 0.44,
+        "mrr@10": 1.0,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7019727018777484,
+        "recall@10": 0.6,
+        "recall@100": 0.44,
+        "mrr@10": 1.0,
+        "returned": 99.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.40741536676357565,
+        "recall@10": 0.4,
+        "recall@100": 0.39,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-already-paid",
+      "relevant": 2383,
+      "partial": 8634,
+      "keyword_all": {
+        "ndcg@10": 0.3589542101716347,
+        "recall@10": 0.2,
+        "recall@100": 0.02,
+        "mrr@10": 1.0,
+        "returned": 2.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.09,
+        "mrr@10": 0.0,
+        "returned": 88.0
+      },
+      "semantic": {
+        "ndcg@10": 0.4104441089306334,
+        "recall@10": 0.3,
+        "recall@100": 0.29,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6341628911438942,
+        "recall@10": 0.5,
+        "recall@100": 0.3,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.42492601381667106,
+        "recall@10": 0.3,
+        "recall@100": 0.25,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-repeated-calls",
+      "relevant": 1490,
+      "partial": 1299,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.24847280551195383,
+        "recall@10": 0.1,
+        "recall@100": 0.14,
+        "mrr@10": 1.0,
+        "returned": 86.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7471589728148226,
+        "recall@10": 0.7,
+        "recall@100": 0.58,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7471589728148226,
+        "recall@10": 0.7,
+        "recall@100": 0.58,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6416043638163353,
+        "recall@10": 0.5,
+        "recall@100": 0.39,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-stop-contact",
+      "relevant": 857,
+      "partial": 1932,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.4268909111036418,
+        "recall@10": 0.2,
+        "recall@100": 0.18,
+        "mrr@10": 1.0,
+        "returned": 96.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7231461552741725,
+        "recall@10": 0.7,
+        "recall@100": 0.41,
+        "mrr@10": 0.5,
+        "returned": 98.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5927129773384978,
+        "recall@10": 0.6,
+        "recall@100": 0.41,
+        "mrr@10": 0.3333333333333333,
+        "returned": 99.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.3350367482577508,
+        "recall@10": 0.4,
+        "recall@100": 0.36,
+        "mrr@10": 0.2,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-threatened-arrest",
+      "relevant": 215,
+      "partial": 2436,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 89.0
+      },
+      "semantic": {
+        "ndcg@10": 0.3165994290430327,
+        "recall@10": 0.2,
+        "recall@100": 0.07,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3165994290430327,
+        "recall@10": 0.2,
+        "recall@100": 0.07,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.13886244387355454,
+        "recall@10": 0.1,
+        "recall@100": 0.07,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-called-employer",
+      "relevant": 199,
+      "partial": 522,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 2.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.02,
+        "mrr@10": 0.0,
+        "returned": 90.0
+      },
+      "semantic": {
+        "ndcg@10": 0.47625020757739,
+        "recall@10": 0.5,
+        "recall@100": 0.31,
+        "mrr@10": 0.3333333333333333,
+        "returned": 98.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5746655878621215,
+        "recall@10": 0.6,
+        "recall@100": 0.31,
+        "mrr@10": 0.5,
+        "returned": 98.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.13189887070514866,
+        "recall@10": 0.1,
+        "recall@100": 0.19,
+        "mrr@10": 0.1,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-fake-lawyer",
+      "relevant": 361,
+      "partial": 2172,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.02,
+        "mrr@10": 0.0,
+        "returned": 80.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.11004588314904008,
+        "recall@10": 0.1,
+        "recall@100": 0.07,
+        "mrr@10": 0.3333333333333333,
+        "returned": 86.0
+      },
+      "semantic": {
+        "ndcg@10": 0.15139734109601005,
+        "recall@10": 0.2,
+        "recall@100": 0.23,
+        "mrr@10": 0.2,
+        "returned": 96.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.14,
+        "mrr@10": 0.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.25469837558210445,
+        "recall@10": 0.3,
+        "recall@100": 0.18,
+        "mrr@10": 0.3333333333333333,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-discharged-bankruptcy",
+      "relevant": 528,
+      "partial": 10489,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 3.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.03668196104968003,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 94.0
+      },
+      "semantic": {
+        "ndcg@10": 0.43046122023668953,
+        "recall@10": 0.4,
+        "recall@100": 0.33,
+        "mrr@10": 0.5,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.38541299932114076,
+        "recall@10": 0.4,
+        "recall@100": 0.34,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.2749315946614599,
+        "recall@10": 0.3,
+        "recall@100": 0.22,
+        "mrr@10": 0.25,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-no-validation",
+      "relevant": 2555,
+      "partial": 1679,
+      "keyword_all": {
+        "ndcg@10": 0.13189887070514866,
+        "recall@10": 0.1,
+        "recall@100": 0.02,
+        "mrr@10": 0.1,
+        "returned": 43.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.4419240888751214,
+        "recall@10": 0.5,
+        "recall@100": 0.24,
+        "mrr@10": 0.5,
+        "returned": 97.0
+      },
+      "semantic": {
+        "ndcg@10": 0.4606476787710206,
+        "recall@10": 0.3,
+        "recall@100": 0.26,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3319179833778036,
+        "recall@10": 0.2,
+        "recall@100": 0.21,
+        "mrr@10": 0.3333333333333333,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6208702696513757,
+        "recall@10": 0.5,
+        "recall@100": 0.29,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "debt-abusive-language",
+      "relevant": 314,
+      "partial": 2475,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.023143740645592423,
+        "recall@10": 0.0,
+        "recall@100": 0.04,
+        "mrr@10": 0.0,
+        "returned": 90.0
+      },
+      "semantic": {
+        "ndcg@10": 0.3947198958455487,
+        "recall@10": 0.2,
+        "recall@100": 0.21,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3947198958455487,
+        "recall@10": 0.2,
+        "recall@100": 0.21,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.29524809092504,
+        "recall@10": 0.2,
+        "recall@100": 0.13,
+        "mrr@10": 0.3333333333333333,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "mortgage-misapplied-payments",
+      "relevant": 5131,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.25329540411053186,
+        "recall@10": 0.3,
+        "recall@100": 0.42,
+        "mrr@10": 0.25,
+        "returned": 88.0
+      },
+      "semantic": {
+        "ndcg@10": 0.8572048559638626,
+        "recall@10": 0.8,
+        "recall@100": 0.72,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.8643145546088337,
+        "recall@10": 0.8,
+        "recall@100": 0.72,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.6879509227782192,
+        "recall@10": 0.7,
+        "recall@100": 0.64,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "mortgage-modification-foreclosure",
+      "relevant": 2460,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.5053603444371989,
+        "recall@10": 0.6,
+        "recall@100": 0.35,
+        "mrr@10": 0.3333333333333333,
+        "returned": 75.0
+      },
+      "semantic": {
+        "ndcg@10": 0.9305687780632227,
+        "recall@10": 0.9,
+        "recall@100": 0.67,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.9305687780632227,
+        "recall@10": 0.9,
+        "recall@100": 0.67,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.4322788421471916,
+        "recall@10": 0.5,
+        "recall@100": 0.59,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "mortgage-closing-delayed",
+      "relevant": 958,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.06625422345438904,
+        "recall@10": 0.1,
+        "recall@100": 0.29,
+        "mrr@10": 0.1111111111111111,
+        "returned": 79.0
+      },
+      "semantic": {
+        "ndcg@10": 0.9363792118010482,
+        "recall@10": 0.9,
+        "recall@100": 0.49,
+        "mrr@10": 1.0,
+        "returned": 90.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.9363792118010482,
+        "recall@10": 0.9,
+        "recall@100": 0.49,
+        "mrr@10": 1.0,
+        "returned": 90.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.9216017310213247,
+        "recall@10": 0.9,
+        "recall@100": 0.46,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "mortgage-refinance-denied",
+      "relevant": 1209,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.5075394027672818,
+        "recall@10": 0.5,
+        "recall@100": 0.05,
+        "mrr@10": 1.0,
+        "returned": 9.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.5420423054868789,
+        "recall@10": 0.5,
+        "recall@100": 0.34,
+        "mrr@10": 1.0,
+        "returned": 83.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6906478832608418,
+        "recall@10": 0.6,
+        "recall@100": 0.46,
+        "mrr@10": 1.0,
+        "returned": 96.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6332196796270029,
+        "recall@10": 0.5,
+        "recall@100": 0.47,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.7859162856301584,
+        "recall@10": 0.7,
+        "recall@100": 0.43,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "student-pslf-wrong-info",
+      "relevant": 1045,
+      "partial": 1846,
+      "keyword_all": {
+        "ndcg@10": 0.22009176629808017,
+        "recall@10": 0.1,
+        "recall@100": 0.01,
+        "mrr@10": 1.0,
+        "returned": 1.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.4351695342927239,
+        "recall@10": 0.3,
+        "recall@100": 0.27,
+        "mrr@10": 0.5,
+        "returned": 79.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7511052630962824,
+        "recall@10": 0.6,
+        "recall@100": 0.5,
+        "mrr@10": 1.0,
+        "returned": 96.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.8138884954315746,
+        "recall@10": 0.7,
+        "recall@100": 0.51,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.8527809579781418,
+        "recall@10": 0.7,
+        "recall@100": 0.46,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "student-extra-payments",
+      "relevant": 984,
+      "partial": 1907,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.557938297465975,
+        "recall@10": 0.5,
+        "recall@100": 0.37,
+        "mrr@10": 1.0,
+        "returned": 84.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6020521034564037,
+        "recall@10": 0.5,
+        "recall@100": 0.45,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6020521034564037,
+        "recall@10": 0.5,
+        "recall@100": 0.45,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.8611375561264454,
+        "recall@10": 0.9,
+        "recall@100": 0.46,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "student-income-driven",
+      "relevant": 344,
+      "partial": 673,
+      "keyword_all": {
+        "ndcg@10": 0.3589542101716347,
+        "recall@10": 0.2,
+        "recall@100": 0.02,
+        "mrr@10": 1.0,
+        "returned": 5.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.05605076215630361,
+        "recall@10": 0.0,
+        "recall@100": 0.04,
+        "mrr@10": 0.0,
+        "returned": 91.0
+      },
+      "semantic": {
+        "ndcg@10": 0.35591771009354295,
+        "recall@10": 0.3,
+        "recall@100": 0.27,
+        "mrr@10": 0.5,
+        "returned": 99.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.5203746770674942,
+        "recall@10": 0.4,
+        "recall@100": 0.26,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.10496004355587699,
+        "recall@10": 0.1,
+        "recall@100": 0.13,
+        "mrr@10": 0.14285714285714285,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "auto-deficiency-balance",
+      "relevant": 184,
+      "partial": 355,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.2718640848664315,
+        "recall@10": 0.3,
+        "recall@100": 0.16,
+        "mrr@10": 0.3333333333333333,
+        "returned": 86.0
+      },
+      "semantic": {
+        "ndcg@10": 0.3273196250911642,
+        "recall@10": 0.2,
+        "recall@100": 0.17,
+        "mrr@10": 1.0,
+        "returned": 92.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.3273196250911642,
+        "recall@10": 0.2,
+        "recall@100": 0.17,
+        "mrr@10": 1.0,
+        "returned": 92.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.2032389337527008,
+        "recall@10": 0.2,
+        "recall@100": 0.21,
+        "mrr@10": 0.1111111111111111,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "auto-title-not-released",
+      "relevant": 164,
+      "partial": 430,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.06943122193677727,
+        "recall@10": 0.1,
+        "recall@100": 0.03,
+        "mrr@10": 0.125,
+        "returned": 94.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6986978162228816,
+        "recall@10": 0.7,
+        "recall@100": 0.38,
+        "mrr@10": 0.5,
+        "returned": 93.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6986978162228816,
+        "recall@10": 0.7,
+        "recall@100": 0.38,
+        "mrr@10": 0.5,
+        "returned": 93.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.3967378179380472,
+        "recall@10": 0.3,
+        "recall@100": 0.29,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "transfer-scam",
+      "relevant": 1138,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.04,
+        "mrr@10": 0.0,
+        "returned": 85.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7264127302306636,
+        "recall@10": 0.7,
+        "recall@100": 0.56,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7264127302306636,
+        "recall@10": 0.7,
+        "recall@100": 0.56,
+        "mrr@10": 1.0,
+        "returned": 95.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.5473983622993501,
+        "recall@10": 0.4,
+        "recall@100": 0.27,
+        "mrr@10": 1.0,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "payday-unexpected-fees",
+      "relevant": 621,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 86.0
+      },
+      "semantic": {
+        "ndcg@10": 0.7191184989488185,
+        "recall@10": 0.7,
+        "recall@100": 0.38,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.7191184989488185,
+        "recall@10": 0.7,
+        "recall@100": 0.38,
+        "mrr@10": 1.0,
+        "returned": 97.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.356878858405979,
+        "recall@10": 0.4,
+        "recall@100": 0.23,
+        "mrr@10": 0.5,
+        "returned": 100.0
+      }
+    },
+    {
+      "id": "transfer-not-delivered",
+      "relevant": 275,
+      "partial": 0,
+      "keyword_all": {
+        "ndcg@10": 0.0,
+        "recall@10": 0.0,
+        "recall@100": 0.0,
+        "mrr@10": 0.0,
+        "returned": 0.0
+      },
+      "keyword_any": {
+        "ndcg@10": 0.085143117641621,
+        "recall@10": 0.1,
+        "recall@100": 0.06,
+        "mrr@10": 0.2,
+        "returned": 85.0
+      },
+      "semantic": {
+        "ndcg@10": 0.6911279212606075,
+        "recall@10": 0.6,
+        "recall@100": 0.24,
+        "mrr@10": 1.0,
+        "returned": 86.0
+      },
+      "hybrid_all": {
+        "ndcg@10": 0.6911279212606075,
+        "recall@10": 0.6,
+        "recall@100": 0.24,
+        "mrr@10": 1.0,
+        "returned": 86.0
+      },
+      "hybrid_any": {
+        "ndcg@10": 0.2832325164972662,
+        "recall@10": 0.3,
+        "recall@100": 0.21,
+        "mrr@10": 0.3333333333333333,
+        "returned": 100.0
+      }
+    }
+  ]
+}

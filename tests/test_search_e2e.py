@@ -31,7 +31,7 @@ def service():
     with pool.connection() as conn:
         ready = conn.execute(
             "SELECT to_regprocedure('search.hybrid_search(text, vector, integer, integer, "
-            "double precision, double precision, integer, date, date, text, text, text)') "
+            "double precision, double precision, integer, date, date, text, text, text, text)') "
             "IS NOT NULL AND EXISTS (SELECT 1 FROM search.complaint_text "
             "WHERE embedding IS NOT NULL)"
         ).fetchone()[0]

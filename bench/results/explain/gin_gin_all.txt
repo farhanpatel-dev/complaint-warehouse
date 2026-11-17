@@ -1,0 +1,16 @@
+Limit  (cost=98.89..98.89 rows=1 width=8) (actual time=1.774..1.775 rows=0 loops=1)
+  Buffers: shared hit=95
+  ->  Sort  (cost=98.89..98.89 rows=1 width=8) (actual time=1.774..1.774 rows=0 loops=1)
+        Sort Key: (ts_rank_cd(t.tsv, '''bank'' & ''put'' & ''hold'' & ''deposit'' & ''won'' & ''releas'' & ''money'''::tsquery)) DESC, t.id
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=95
+        ->  Bitmap Heap Scan on chunk_vectors t  (cost=94.86..98.88 rows=1 width=8) (actual time=1.771..1.772 rows=0 loops=1)
+              Recheck Cond: (tsv @@ '''bank'' & ''put'' & ''hold'' & ''deposit'' & ''won'' & ''releas'' & ''money'''::tsquery)
+              Buffers: shared hit=95
+              ->  Bitmap Index Scan on bench_gin_tsv  (cost=0.00..94.86 rows=1 width=0) (actual time=1.770..1.771 rows=0 loops=1)
+                    Index Cond: (tsv @@ '''bank'' & ''put'' & ''hold'' & ''deposit'' & ''won'' & ''releas'' & ''money'''::tsquery)
+                    Buffers: shared hit=95
+Planning:
+  Buffers: shared hit=1
+Planning Time: 0.102 ms
+Execution Time: 1.788 ms
