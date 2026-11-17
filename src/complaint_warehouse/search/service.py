@@ -33,9 +33,18 @@ MODE_WEIGHTS: dict[SearchMode, tuple[float, float]] = {
 }
 
 
+class KeywordMatch(StrEnum):
+    all = "all"
+    any = "any"
+
+
 class SearchParams(BaseModel):
     q: str = Field(min_length=1, max_length=500, description="Free-text query.")
     mode: SearchMode = SearchMode.hybrid
+    keyword_match: KeywordMatch = Field(
+        default=KeywordMatch.all,
+        description="Keyword arm: 'all' requires every query term, 'any' matches any of them.",
+    )
     k: int = Field(default=10, ge=1, le=100, description="Complaints to return.")
     candidates: int = Field(
         default=100, ge=1, le=1000, description="Chunks each arm keeps before fusion."
@@ -92,7 +101,12 @@ SELECT
     f.product_family, f.issue, f.state_code, f.response_type, f.timely_flag, h.best_chunk_no,
     CASE
         WHEN h.keyword_rank IS NOT NULL THEN ts_headline(
-            'english', t.narrative, websearch_to_tsquery('english', %(q)s),
+            'english', t.narrative,
+            CASE
+                WHEN %(keyword_match)s = 'any' THEN
+                    replace(websearch_to_tsquery('english', %(q)s)::text, ' & ', ' | ')::tsquery
+                ELSE websearch_to_tsquery('english', %(q)s)
+            END,
             'MaxWords=45, MinWords=20, MaxFragments=2, StartSel=**, StopSel=**'
         )
         ELSE left(t.narrative, 300)
@@ -109,7 +123,8 @@ FROM search.hybrid_search(
     date_to => %(date_to)s,
     product_family => %(product_family)s,
     company_name => %(company)s,
-    state_code => %(state)s
+    state_code => %(state)s,
+    keyword_match => %(keyword_match)s
 ) AS h
 JOIN search.complaint_facets AS f ON f.complaint_id = h.complaint_id
 JOIN search.complaint_text AS t
@@ -146,6 +161,7 @@ class SearchService:
             "product_family": params.product_family,
             "company": params.company,
             "state": params.state,
+            "keyword_match": params.keyword_match.value,
         }
         with self.pool.connection() as conn:
             rows = conn.execute(SEARCH_SQL, args).fetchall()

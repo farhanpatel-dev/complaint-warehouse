@@ -75,6 +75,7 @@ def test_search_passes_validated_params(client, fake):
         {"q": "ok", "k": 101},
         {"q": "ok", "k": 50, "candidates": 20},
         {"q": "ok", "mode": "fuzzy"},
+        {"q": "ok", "keyword_match": "some"},
         {"q": "ok", "state": "Texas"},
         {"q": "ok", "date_from": "2025-02-01", "date_to": "2025-01-01"},
     ],
@@ -82,6 +83,12 @@ def test_search_passes_validated_params(client, fake):
 def test_invalid_requests_are_422(client, fake, params):
     assert client.get("/search", params=params).status_code == 422
     assert fake.calls == []
+
+
+def test_keyword_match_defaults_to_all_and_accepts_any(client, fake):
+    client.get("/search", params={"q": "late fee"})
+    client.get("/search", params={"q": "late fee", "keyword_match": "any"})
+    assert [p.keyword_match.value for p in fake.calls] == ["all", "any"]
 
 
 def test_statement_timeout_maps_to_504(client):
@@ -151,4 +158,5 @@ def test_hybrid_mode_embeds_the_query_once_and_reports_timings():
     resp = SearchService(pool, enc).search(SearchParams(q="late fee", company="ACME"))
     assert enc.queries == ["late fee"]
     assert pool.args["company"] == "ACME" and (pool.args["kw"], pool.args["sw"]) == (1.0, 1.0)
+    assert pool.args["keyword_match"] == "all"
     assert set(resp.took_ms) == {"embed", "db", "total"}

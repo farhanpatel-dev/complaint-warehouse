@@ -44,6 +44,13 @@
         and hybrid_search.product_family is null and hybrid_search.company_name is null
         and hybrid_search.state_code is null)
     {%- endset -%}
+-- Adding a parameter creates a new overload instead of replacing the function, and two
+-- overloads make named-argument calls ambiguous, so drop the signature before keyword_match.
+drop function if exists search.hybrid_search(
+    text, vector, integer, integer, double precision, double precision, integer,
+    date, date, text, text, text
+);
+
 create or replace function search.hybrid_search(
     query_text text,
     query_embedding vector({{ var('embedding_dim') | int }}),
@@ -56,7 +63,8 @@ create or replace function search.hybrid_search(
     date_to date default null,
     product_family text default null,
     company_name text default null,
-    state_code text default null
+    state_code text default null,
+    keyword_match text default 'all'
 )
 returns table (
     complaint_id bigint,
@@ -73,8 +81,23 @@ parallel safe
 as $fn$
 with
 
-query as (
-    select websearch_to_tsquery('english', query_text) as tsq
+-- keyword_match 'all' requires every term (websearch_to_tsquery's AND); 'any' ORs the same
+-- stemmed lexemes, so a long natural-language query still finds chunks that share only
+-- some of its words. The cast back to tsquery keeps the lexemes as they are (no re-stemming).
+--
+-- NOT MATERIALIZED matters: the two-argument websearch_to_tsquery is immutable, so once the
+-- function is inlined the planner folds this to a constant tsquery and estimates how many
+-- chunks match from the tsv statistics. Materialized, it is opaque and the planner assumes
+-- 0.5% of chunks match. That suits AND queries, but an OR query matching half the corpus
+-- then fetched millions of rows through GIN before applying the filter (471 s, 11 GB of
+-- temp files, measured in phase 6).
+query as not materialized (
+    select
+        case
+            when hybrid_search.keyword_match = 'any'
+                then replace(websearch_to_tsquery('english', query_text)::text, ' & ', ' | ')::tsquery
+            else websearch_to_tsquery('english', query_text)
+        end as tsq
 ),
 
 -- Filters are applied inside each arm, before the LIMIT, so a filtered search still returns

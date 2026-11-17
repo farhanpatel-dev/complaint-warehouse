@@ -18,6 +18,7 @@ from complaint_warehouse import __version__
 from complaint_warehouse.config import get_settings
 from complaint_warehouse.db import close_pool, get_pool
 from complaint_warehouse.search.service import (
+    KeywordMatch,
     SearchMode,
     SearchParams,
     SearchResponse,
@@ -88,6 +89,9 @@ def search(
     service: Annotated[SearchService, Depends(get_search_service)],
     q: Annotated[str, Query(description="Free-text query, e.g. 'charged twice for one purchase'")],
     mode: SearchMode = SearchMode.hybrid,
+    keyword_match: Annotated[
+        KeywordMatch, Query(description="'all' requires every term, 'any' matches any term")
+    ] = KeywordMatch.all,
     k: Annotated[int, Query(description="Complaints to return (1-100)")] = 10,
     candidates: Annotated[int, Query(description="Chunks per arm before fusion")] = 100,
     rrf_k: Annotated[int, Query(description="Reciprocal Rank Fusion constant")] = 60,
@@ -102,6 +106,7 @@ def search(
         params = SearchParams(
             q=q,
             mode=mode,
+            keyword_match=keyword_match,
             k=k,
             candidates=candidates,
             rrf_k=rrf_k,
