@@ -99,19 +99,45 @@ the cosine similarity, its complaint attributes and a highlighted snippet of its
 The design and the query plans behind it are in
 [ADR 0002](docs/adr/0002-hybrid-search-rrf.md).
 
-Until the phase 6 vector index exists, an unfiltered semantic or hybrid search is an exact
-scan of 5.6M vectors (about 100 s) and returns 504 at the 30 s statement timeout. Keyword
-search (92 ms) and filtered hybrid search (about 1 s for a month and a product family) are
-already interactive.
+`keyword_match=all` (the default) requires every query term in the keyword arm; `any` ORs
+them. The evaluation below showed that OR makes hybrid results worse, so it is opt-in.
+
+Without a vector index, an unfiltered semantic or hybrid search is an exact scan of 5.6M
+vectors (about 100 s) and returns 504 at the 30 s statement timeout. Keyword search (30 ms
+warm) and filtered hybrid search (about 1 s for a month and a product family, 1.6 s for a
+whole year) are interactive. The index study below picks the HNSW parameters; building that
+index over the full corpus needs more memory than this laptop's Docker VM (ADR 0004).
+
+## Benchmarks
+
+`make bench ARGS=prepare|index|gin|quality|analytics` writes JSON results and generated
+Markdown to [`bench/results/`](bench/results/). Method notes are in
+[`bench/README.md`](bench/README.md). Headline numbers:
+
+- **Vector indexes** (500k-chunk sample, exact top-100 ground truth): HNSW on `halfvec`,
+  m = 32, ef_construction = 128, reaches recall@100 of 0.904 at 17.5 ms p50 with
+  ef_search = 200. The float32 index is 1.6 GB; this one is 858 MB. IVFFlat needs 34–66 ms
+  for about 0.9 recall@10, where HNSW needs 10 ms. Details:
+  [index study](bench/results/index_study.md) and
+  [ADR 0004](docs/adr/0004-hnsw-parameters.md).
+- **Search quality** (52 queries labelled by CFPB issue and sub-issue, 2019): nDCG@10 is
+  0.149 for keyword (AND), 0.564 for semantic and 0.563 for hybrid. Hybrid has the best
+  MRR, 0.80. OR matching drops hybrid to 0.442. Details:
+  [search quality](bench/results/search_quality.md) and
+  [ADR 0002](docs/adr/0002-hybrid-search-rrf.md).
+- **Analytics library** ([`sql/analytics/`](sql/analytics/)): rolling 30-day timely rate,
+  z-score anomalies, a Wilson-ranked timely-response league table, company cohorts and
+  YoY / YTD trends. Each runs in 10–760 ms over the marts. Details:
+  [analytics](bench/results/analytics.md).
 
 ## Repository layout
 
 ```
-src/complaint_warehouse/   Python package: config, db helpers, ingest/, embed/, search/, API (bench in phase 6)
+src/complaint_warehouse/   Python package: config, db helpers, ingest/, embed/, search/, bench/, API
 db/init/                   SQL run on first Postgres start (extensions + schemas)
 dbt/                       dbt project: staging, star schema, search chunks, marts, tests
-sql/                       analytics SQL library (phase 6)
-bench/                     benchmark harness and labeled query set (phase 6)
+sql/analytics/             analytics SQL library
+bench/                     labelled queries, benchmark results and query plans
 docs/                      HLD, LLD, ADRs, runbook, benchmarks
 scripts/                   maintenance scripts (CI fixture builder)
 tests/                     pytest suite
