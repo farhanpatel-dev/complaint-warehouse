@@ -81,5 +81,5 @@ embed: ## Embed pending narrative chunks, resuming from the checkpoint (GPU=1, A
 embed-status: ## Show embedded/pending chunk counts and checkpoints
 	$(RUN) python -m complaint_warehouse.embed status
 
-bench: ## Run index and search-quality benchmarks (phase 6)
+bench: ## Benchmarks: ARGS="prepare|index|gin|quality|analytics|report" (see bench/README.md)
 	$(RUN) python -m complaint_warehouse.bench $(ARGS)
