@@ -1,0 +1,18 @@
+Limit  (cost=55276.18..55287.85 rows=100 width=8) (actual time=427.142..439.071 rows=100 loops=1)
+  Buffers: shared hit=49581
+  ->  Gather Merge  (cost=55276.18..68933.67 rows=117056 width=8) (actual time=427.140..439.059 rows=100 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=49581
+        ->  Sort  (cost=54276.16..54422.48 rows=58528 width=8) (actual time=422.567..422.571 rows=78 loops=3)
+              Sort Key: (ts_rank_cd(t.tsv, '''bank'' | ''put'' | ''hold'' | ''deposit'' | ''won'' | ''releas'' | ''money'''::tsquery)) DESC, t.id
+              Sort Method: top-N heapsort  Memory: 30kB
+              Buffers: shared hit=49581
+              Worker 0:  Sort Method: top-N heapsort  Memory: 30kB
+              Worker 1:  Sort Method: top-N heapsort  Memory: 30kB
+              ->  Parallel Seq Scan on chunk_vectors t  (cost=0.00..52039.26 rows=58528 width=8) (actual time=0.336..417.017 rows=38668 loops=3)
+                    Filter: (tsv @@ '''bank'' | ''put'' | ''hold'' | ''deposit'' | ''won'' | ''releas'' | ''money'''::tsquery)
+                    Rows Removed by Filter: 128560
+                    Buffers: shared hit=49451
+Planning Time: 0.228 ms
+Execution Time: 439.105 ms

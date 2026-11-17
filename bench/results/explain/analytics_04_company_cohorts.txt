@@ -1,0 +1,30 @@
+WindowAgg  (cost=11550.16..12726.94 rows=21396 width=80) (actual time=169.388..176.830 rows=136 loops=1)
+  Buffers: shared hit=4224
+  CTE company_year
+    ->  HashAggregate  (cost=8503.16..8931.08 rows=21396 width=94) (actual time=100.141..118.013 rows=44339 loops=1)
+          Group Key: mv_company_monthly.company_name, EXTRACT(year FROM mv_company_monthly.month)
+          Batches: 1  Memory Usage: 9745kB
+          Buffers: shared hit=4224
+          ->  Seq Scan on mv_company_monthly  (cost=0.00..6898.48 rows=213958 width=70) (actual time=0.013..42.406 rows=213958 loops=1)
+                Buffers: shared hit=4224
+  ->  GroupAggregate  (cost=2619.08..3207.47 rows=21396 width=48) (actual time=169.365..176.655 rows=136 loops=1)
+        Group Key: f.cohort_year, ((c.yr - f.cohort_year))
+        Buffers: shared hit=4224
+        ->  Sort  (cost=2619.08..2672.57 rows=21396 width=40) (actual time=169.342..172.016 rows=44339 loops=1)
+              Sort Key: f.cohort_year, ((c.yr - f.cohort_year))
+              Sort Method: quicksort  Memory: 3268kB
+              Buffers: shared hit=4224
+              ->  Hash Join  (cost=541.40..1080.16 rows=21396 width=40) (actual time=145.041..161.398 rows=44339 loops=1)
+                    Hash Cond: (c.company_name = f.company_name)
+                    Buffers: shared hit=4224
+                    ->  CTE Scan on company_year c  (cost=0.00..427.92 rows=21396 width=68) (actual time=100.143..105.194 rows=44339 loops=1)
+                          Buffers: shared hit=4224
+                    ->  Hash  (cost=538.90..538.90 rows=200 width=36) (actual time=44.881..44.883 rows=8214 loops=1)
+                          Buckets: 16384 (originally 1024)  Batches: 1 (originally 1)  Memory Usage: 630kB
+                          ->  Subquery Scan on f  (cost=534.90..538.90 rows=200 width=36) (actual time=40.631..43.243 rows=8214 loops=1)
+                                ->  HashAggregate  (cost=534.90..536.90 rows=200 width=36) (actual time=40.629..42.455 rows=8214 loops=1)
+                                      Group Key: company_year.company_name
+                                      Batches: 1  Memory Usage: 1441kB
+                                      ->  CTE Scan on company_year  (cost=0.00..427.92 rows=21396 width=36) (actual time=0.001..28.409 rows=44339 loops=1)
+Planning Time: 0.271 ms
+Execution Time: 177.291 ms

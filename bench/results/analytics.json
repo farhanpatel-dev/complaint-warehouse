@@ -1,0 +1,292 @@
+{
+  "environment": {
+    "measured_at": "2026-11-17T01:33:13+00:00",
+    "package_version": "0.1.0",
+    "postgres": "16.10 (Debian 16.10-1.pgdg12+1)",
+    "pgvector": "0.8.0",
+    "settings": {
+      "shared_buffers": "512MB",
+      "effective_cache_size": "4GB",
+      "work_mem": "64MB",
+      "maintenance_work_mem": "1GB",
+      "max_parallel_workers_per_gather": "2",
+      "max_parallel_maintenance_workers": "2",
+      "random_page_cost": "1.1",
+      "jit": "on"
+    },
+    "client": {
+      "python": "3.12.16",
+      "cpus": 16,
+      "mem_total": "7770292 kB",
+      "machine": "x86_64"
+    }
+  },
+  "runs": 5,
+  "queries": {
+    "01_rolling_30d_timely_rate": {
+      "file": "sql/analytics/01_rolling_30d_timely_rate.sql",
+      "rows": 4380,
+      "first_run_ms": 1720.7,
+      "median_ms": 576.2,
+      "planning_ms": 0.5,
+      "shared_hit_blocks": 260250,
+      "shared_read_blocks": 7879,
+      "sample": [
+        {
+          "date_day": "2025-11-15",
+          "product_family": "Bank accounts",
+          "complaints": "150",
+          "complaints_30d": "6033",
+          "timely_rate_30d": "0.9939"
+        },
+        {
+          "date_day": "2025-11-16",
+          "product_family": "Bank accounts",
+          "complaints": "106",
+          "complaints_30d": "5931",
+          "timely_rate_30d": "0.9938"
+        },
+        {
+          "date_day": "2025-11-17",
+          "product_family": "Bank accounts",
+          "complaints": "230",
+          "complaints_30d": "6048",
+          "timely_rate_30d": "0.9940"
+        },
+        {
+          "date_day": "2025-11-18",
+          "product_family": "Bank accounts",
+          "complaints": "285",
+          "complaints_30d": "6246",
+          "timely_rate_30d": "0.9944"
+        },
+        {
+          "date_day": "2025-11-19",
+          "product_family": "Bank accounts",
+          "complaints": "275",
+          "complaints_30d": "6325",
+          "timely_rate_30d": "0.9943"
+        }
+      ]
+    },
+    "02_zscore_anomalies": {
+      "file": "sql/analytics/02_zscore_anomalies.sql",
+      "rows": 14,
+      "first_run_ms": 2755.3,
+      "median_ms": 756.0,
+      "planning_ms": 0.4,
+      "shared_hit_blocks": 249028,
+      "shared_read_blocks": 0,
+      "sample": [
+        {
+          "date_day": "2026-09-21",
+          "company_name": "CREDIT ACCEPTANCE CORPORATION",
+          "complaints": "42",
+          "mean_28d": "7.3",
+          "stddev_28d": "4.7",
+          "z_score": "7.3"
+        },
+        {
+          "date_day": "2026-10-20",
+          "company_name": "Servicer under contract with Federal Student Aid",
+          "complaints": "26",
+          "mean_28d": "7.3",
+          "stddev_28d": "2.7",
+          "z_score": "7.0"
+        },
+        {
+          "date_day": "2026-03-27",
+          "company_name": "Servicer under contract with Federal Student Aid",
+          "complaints": "75",
+          "mean_28d": "17.2",
+          "stddev_28d": "10.0",
+          "z_score": "5.8"
+        },
+        {
+          "date_day": "2026-08-11",
+          "company_name": "Early Warning Services, LLC",
+          "complaints": "46",
+          "mean_28d": "15.7",
+          "stddev_28d": "5.3",
+          "z_score": "5.7"
+        },
+        {
+          "date_day": "2026-11-03",
+          "company_name": "CBC Companies, Inc.",
+          "complaints": "116",
+          "mean_28d": "32.1",
+          "stddev_28d": "16.3",
+          "z_score": "5.1"
+        }
+      ]
+    },
+    "03_timely_response_ranking": {
+      "file": "sql/analytics/03_timely_response_ranking.sql",
+      "rows": 202,
+      "first_run_ms": 15.2,
+      "median_ms": 10.5,
+      "planning_ms": 0.4,
+      "shared_hit_blocks": 572,
+      "shared_read_blocks": 0,
+      "sample": [
+        {
+          "company_name": "TRANSUNION INTERMEDIATE HOLDINGS, INC.",
+          "industry": "Credit reporting agency",
+          "complaints": "2304999",
+          "timely_rate": "1.0000",
+          "timely_rate_lower_95": "1.0000",
+          "overall_rank": 1,
+          "industry_rank": 1,
+          "quartile": 1
+        },
+        {
+          "company_name": "EQUIFAX, INC.",
+          "industry": "Credit reporting agency",
+          "complaints": "2048694",
+          "timely_rate": "1.0000",
+          "timely_rate_lower_95": "1.0000",
+          "overall_rank": 2,
+          "industry_rank": 2,
+          "quartile": 1
+        },
+        {
+          "company_name": "Experian Information Solutions Inc.",
+          "industry": "Credit reporting agency",
+          "complaints": "2036606",
+          "timely_rate": "1.0000",
+          "timely_rate_lower_95": "1.0000",
+          "overall_rank": 3,
+          "industry_rank": 3,
+          "quartile": 1
+        },
+        {
+          "company_name": "JPMORGAN CHASE & CO.",
+          "industry": "Bank",
+          "complaints": "27543",
+          "timely_rate": "1.0000",
+          "timely_rate_lower_95": "0.9999",
+          "overall_rank": 4,
+          "industry_rank": 1,
+          "quartile": 1
+        },
+        {
+          "company_name": "CAPITAL ONE FINANCIAL CORPORATION",
+          "industry": "Bank",
+          "complaints": "35760",
+          "timely_rate": "1.0000",
+          "timely_rate_lower_95": "0.9998",
+          "overall_rank": 5,
+          "industry_rank": 2,
+          "quartile": 1
+        }
+      ]
+    },
+    "04_company_cohorts": {
+      "file": "sql/analytics/04_company_cohorts.sql",
+      "rows": 136,
+      "first_run_ms": 207.6,
+      "median_ms": 167.5,
+      "planning_ms": 0.2,
+      "shared_hit_blocks": 4224,
+      "shared_read_blocks": 0,
+      "sample": [
+        {
+          "cohort_year": 2011,
+          "years_since": 0,
+          "active_companies": 73,
+          "retention": "1.000",
+          "complaints": "2536"
+        },
+        {
+          "cohort_year": 2011,
+          "years_since": 1,
+          "active_companies": 71,
+          "retention": "0.973",
+          "complaints": "65182"
+        },
+        {
+          "cohort_year": 2011,
+          "years_since": 2,
+          "active_companies": 72,
+          "retention": "0.986",
+          "complaints": "75711"
+        },
+        {
+          "cohort_year": 2011,
+          "years_since": 3,
+          "active_companies": 71,
+          "retention": "0.973",
+          "complaints": "73868"
+        },
+        {
+          "cohort_year": 2011,
+          "years_since": 4,
+          "active_companies": 71,
+          "retention": "0.973",
+          "complaints": "75399"
+        }
+      ]
+    },
+    "05_yoy_trends": {
+      "file": "sql/analytics/05_yoy_trends.sql",
+      "rows": 288,
+      "first_run_ms": 40.3,
+      "median_ms": 49.1,
+      "planning_ms": 0.3,
+      "shared_hit_blocks": 24,
+      "shared_read_blocks": 0,
+      "sample": [
+        {
+          "month": "2024-12-01",
+          "product_family": "Bank accounts",
+          "complaints": "4798",
+          "complaints_prior_year": "3821",
+          "yoy_pct": "25.6",
+          "ytd": "52821",
+          "ytd_prior_year": "49873",
+          "ytd_yoy_pct": "5.9"
+        },
+        {
+          "month": "2025-01-01",
+          "product_family": "Bank accounts",
+          "complaints": "18367",
+          "complaints_prior_year": "4032",
+          "yoy_pct": "355.5",
+          "ytd": "18367",
+          "ytd_prior_year": "4032",
+          "ytd_yoy_pct": "355.5"
+        },
+        {
+          "month": "2025-02-01",
+          "product_family": "Bank accounts",
+          "complaints": "5452",
+          "complaints_prior_year": "3833",
+          "yoy_pct": "42.2",
+          "ytd": "23819",
+          "ytd_prior_year": "7865",
+          "ytd_yoy_pct": "202.8"
+        },
+        {
+          "month": "2025-03-01",
+          "product_family": "Bank accounts",
+          "complaints": "5070",
+          "complaints_prior_year": "4257",
+          "yoy_pct": "19.1",
+          "ytd": "28889",
+          "ytd_prior_year": "12122",
+          "ytd_yoy_pct": "138.3"
+        },
+        {
+          "month": "2025-04-01",
+          "product_family": "Bank accounts",
+          "complaints": "5229",
+          "complaints_prior_year": "4327",
+          "yoy_pct": "20.8",
+          "ytd": "34118",
+          "ytd_prior_year": "16449",
+          "ytd_yoy_pct": "107.4"
+        }
+      ]
+    }
+  }
+}
