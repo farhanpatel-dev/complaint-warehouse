@@ -6,7 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-17
+
 ### Added
+- Documentation: HLD, LLD, data dictionary, runbook, benchmarks summary and interview notes
+  under `docs/`, plus ADR 0001 (Postgres + pgvector over a dedicated vector database) and
+  ADR 0003 (SCD Type 2 with dbt snapshots).
 - Benchmark harness (`python -m complaint_warehouse.bench`, `make bench ARGS=...`): vector index
   study (HNSW / IVFFlat, `vector` / `halfvec`, exact baseline, client-side exact ground truth),
   GIN keyword study, labelled search-quality evaluation (nDCG, capped recall, MRR, paired
