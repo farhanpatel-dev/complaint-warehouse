@@ -1,6 +1,7 @@
 {#
     Product family x product x month. product_family comes from the current taxonomy so
-    trends line up across the CFPB's 2017 and 2023 product renames.
+    trends line up across the CFPB's 2017 and 2023 product renames. timely_rate excludes
+    in-progress complaints, which the CFPB marks timely before the company answers.
 #}
 {{ config(
     indexes=[
@@ -22,7 +23,10 @@ select
     cur.product_family,
     p.product,
     count(*) as complaints,
-    round(avg(f.timely_flag::int)::numeric, 4) as timely_rate,
+    count(*) filter (where f.response_type <> 'In progress') as responded,
+    round(
+        avg(f.timely_flag::int) filter (where f.response_type <> 'In progress')::numeric, 4
+    ) as timely_rate,
     count(*) filter (where f.response_type = 'Closed with monetary relief') as monetary_relief,
     count(*) filter (where f.has_narrative) as with_narrative
 from {{ ref('fact_complaint') }} as f

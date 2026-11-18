@@ -2,15 +2,38 @@
 
 A PostgreSQL + pgvector warehouse over the CFPB Consumer Complaint Database that supports both analytics and hybrid (keyword + semantic) search.
 
-> Work in progress. I am building this in phases; see `CHANGELOG.md` for what has landed.
+19.2M complaints, 3.85M consumer narratives and 5.6M embedded narrative chunks live in one
+Postgres instance:
 
-## Quickstart (current state)
+- an idempotent ingestion job;
+- a dbt star schema with SCD Type 2 dimensions and a monthly partitioned fact;
+- a resumable GPU embedding job;
+- Reciprocal Rank Fusion search in a single SQL function behind FastAPI.
+
+Benchmarks against exact ground truth and labelled queries drove the design choices.
+
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [HLD](docs/HLD.md) | Purpose, requirements, architecture, decisions, limitations |
+| [LLD](docs/LLD.md) | How each component works: merge SQL, partitioning, SCD2, embedding job, search function, API |
+| [Data dictionary](docs/DATA_DICTIONARY.md) | Every table and column, with data-quality caveats |
+| [Runbook](docs/RUNBOOK.md) | Build, refresh, health checks, known problems and fixes, backup |
+| [Benchmarks](docs/BENCHMARKS.md) | Vector indexes, GIN, search quality, analytics, pipeline throughput |
+| [Interview notes](docs/INTERVIEW_NOTES.md) | Pitch, trade-offs, the problems I hit and how I fixed them |
+| ADRs | [0001 Postgres + pgvector](docs/adr/0001-postgres-pgvector-over-dedicated-vector-db.md) · [0002 hybrid search / RRF](docs/adr/0002-hybrid-search-rrf.md) · [0003 SCD Type 2](docs/adr/0003-scd-type-2.md) · [0004 HNSW parameters](docs/adr/0004-hnsw-parameters.md) · [0005 narrative source](docs/adr/0005-narratives-from-cfpb-foia-archive.md) · [0006 embedding job](docs/adr/0006-embedding-model-and-batch-job.md) |
+
+## Quickstart
 
 ```bash
 cp .env.example .env
 make up                       # or: docker compose up -d --build --wait
 curl localhost:8000/health    # {"status":"ok", "database": {"postgres": "16.x", "pgvector": "0.8.0"}}
 ```
+
+A full build (backfill, narratives, dbt, embeddings) takes about an hour plus 4 GPU hours.
+The steps and timings are in the [runbook](docs/RUNBOOK.md#1-first-full-build).
 
 Local development:
 
@@ -127,7 +150,8 @@ Markdown to [`bench/results/`](bench/results/). Method notes are in
   [ADR 0002](docs/adr/0002-hybrid-search-rrf.md).
 - **Analytics library** ([`sql/analytics/`](sql/analytics/)): rolling 30-day timely rate,
   z-score anomalies, a Wilson-ranked timely-response league table, company cohorts and
-  YoY / YTD trends. Each runs in 10–760 ms over the marts. Details:
+  YoY / YTD trends. Each runs in 24–695 ms over the marts. Timely rates count only
+  answered complaints, because the CFPB marks in-progress ones timely. Details:
   [analytics](bench/results/analytics.md).
 
 ## Repository layout

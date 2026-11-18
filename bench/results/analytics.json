@@ -1,6 +1,6 @@
 {
   "environment": {
-    "measured_at": "2026-11-17T01:33:13+00:00",
+    "measured_at": "2026-11-18T06:20:42+00:00",
     "package_version": "0.1.0",
     "postgres": "16.10 (Debian 16.10-1.pgdg12+1)",
     "pgvector": "0.8.0",
@@ -26,11 +26,11 @@
     "01_rolling_30d_timely_rate": {
       "file": "sql/analytics/01_rolling_30d_timely_rate.sql",
       "rows": 4380,
-      "first_run_ms": 1720.7,
-      "median_ms": 576.2,
-      "planning_ms": 0.5,
-      "shared_hit_blocks": 260250,
-      "shared_read_blocks": 7879,
+      "first_run_ms": 680.6,
+      "median_ms": 441.3,
+      "planning_ms": 0.9,
+      "shared_hit_blocks": 262342,
+      "shared_read_blocks": 7391,
       "sample": [
         {
           "date_day": "2025-11-15",
@@ -72,10 +72,10 @@
     "02_zscore_anomalies": {
       "file": "sql/analytics/02_zscore_anomalies.sql",
       "rows": 14,
-      "first_run_ms": 2755.3,
-      "median_ms": 756.0,
-      "planning_ms": 0.4,
-      "shared_hit_blocks": 249028,
+      "first_run_ms": 861.0,
+      "median_ms": 694.6,
+      "planning_ms": 0.5,
+      "shared_hit_blocks": 249032,
       "shared_read_blocks": 0,
       "sample": [
         {
@@ -122,11 +122,11 @@
     },
     "03_timely_response_ranking": {
       "file": "sql/analytics/03_timely_response_ranking.sql",
-      "rows": 202,
-      "first_run_ms": 15.2,
-      "median_ms": 10.5,
+      "rows": 200,
+      "first_run_ms": 78.9,
+      "median_ms": 24.2,
       "planning_ms": 0.4,
-      "shared_hit_blocks": 572,
+      "shared_hit_blocks": 4524,
       "shared_read_blocks": 0,
       "sample": [
         {
@@ -170,13 +170,13 @@
           "quartile": 1
         },
         {
-          "company_name": "CAPITAL ONE FINANCIAL CORPORATION",
-          "industry": "Bank",
-          "complaints": "35760",
+          "company_name": "ENCORE CAPITAL GROUP INC.",
+          "industry": "Debt buyer or collector",
+          "complaints": "23936",
           "timely_rate": "1.0000",
           "timely_rate_lower_95": "0.9998",
           "overall_rank": 5,
-          "industry_rank": 2,
+          "industry_rank": 1,
           "quartile": 1
         }
       ]
@@ -184,10 +184,10 @@
     "04_company_cohorts": {
       "file": "sql/analytics/04_company_cohorts.sql",
       "rows": 136,
-      "first_run_ms": 207.6,
-      "median_ms": 167.5,
+      "first_run_ms": 204.0,
+      "median_ms": 173.3,
       "planning_ms": 0.2,
-      "shared_hit_blocks": 4224,
+      "shared_hit_blocks": 4416,
       "shared_read_blocks": 0,
       "sample": [
         {
@@ -230,10 +230,10 @@
     "05_yoy_trends": {
       "file": "sql/analytics/05_yoy_trends.sql",
       "rows": 288,
-      "first_run_ms": 40.3,
-      "median_ms": 49.1,
-      "planning_ms": 0.3,
-      "shared_hit_blocks": 24,
+      "first_run_ms": 44.5,
+      "median_ms": 41.6,
+      "planning_ms": 0.4,
+      "shared_hit_blocks": 25,
       "shared_read_blocks": 0,
       "sample": [
         {

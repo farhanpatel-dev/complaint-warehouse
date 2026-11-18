@@ -6,7 +6,12 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-17
+
 ### Added
+- Documentation: HLD, LLD, data dictionary, runbook, benchmarks summary and interview notes
+  under `docs/`, plus ADR 0001 (Postgres + pgvector over a dedicated vector database) and
+  ADR 0003 (SCD Type 2 with dbt snapshots).
 - Benchmark harness (`python -m complaint_warehouse.bench`, `make bench ARGS=...`): vector index
   study (HNSW / IVFFlat, `vector` / `halfvec`, exact baseline, client-side exact ground truth),
   GIN keyword study, labelled search-quality evaluation (nDCG, capped recall, MRR, paired
@@ -56,6 +61,11 @@ All notable changes to this project are documented here. The format follows
   extensions and the `raw`, `staging`, `warehouse`, `marts`, `search` and `ops` schemas.
 - `/health` endpoint reporting Postgres and pgvector versions.
 - Makefile, `.env.example`, pre-commit (ruff, black, sqlfluff), pytest suite and GitHub Actions CI.
+
+### Fixed
+- Timely rates in the marts and analytics queries now exclude complaints still "In progress".
+  The CFPB publishes them as timely before the company answers (651k complaints, 74% of the
+  current month), which inflated recent months. The marts gain a `responded` column.
 
 ### Changed
 - Postgres `random_page_cost` set to 1.1 (SSD): a search filtered to one year chose a 64 s

@@ -2,6 +2,9 @@
     Company x month scorecard. Reported "as is": every month uses the company's *current*
     parent group and industry, so a reclassification changes the whole history consistently.
     The fact keeps the "as was" keys for analyses that need the historical view.
+
+    Timely rates count only answered complaints: the CFPB publishes "Timely response? = Yes"
+    on complaints still "In progress", which would inflate recent months.
 #}
 {{ config(
     indexes=[
@@ -25,8 +28,11 @@ select
     cur.parent_group,
     cur.industry,
     count(*) as complaints,
-    count(*) filter (where f.timely_flag) as timely_responses,
-    round(avg(f.timely_flag::int)::numeric, 4) as timely_rate,
+    count(*) filter (where f.response_type <> 'In progress') as responded,
+    count(*) filter (where f.timely_flag and f.response_type <> 'In progress') as timely_responses,
+    round(
+        avg(f.timely_flag::int) filter (where f.response_type <> 'In progress')::numeric, 4
+    ) as timely_rate,
     count(*) filter (where f.response_type = 'Closed with monetary relief') as monetary_relief,
     count(*) filter (where f.response_type = 'Closed with non-monetary relief') as non_monetary_relief,
     count(*) filter (where f.response_type = 'In progress') as in_progress,

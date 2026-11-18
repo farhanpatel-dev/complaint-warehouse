@@ -1,8 +1,9 @@
 -- Rolling 30-day complaint volume and timely-response rate per product family, last 365 days.
 --
--- The rate is sum(timely) / sum(complaints) over the window, not an average of daily rates:
+-- The rate is sum(timely) / sum(responded) over the window, not an average of daily rates:
 -- averaging ratios would give a quiet day with 3 complaints the same weight as a busy day
--- with 3,000.
+-- with 3,000. "Responded" leaves out complaints still in progress, which the CFPB already
+-- marks timely; counting them pushed the last weeks' rate towards 100%.
 --
 -- The series is densified against dim_date first. A ROWS frame counts rows, not days, so
 -- a family with no complaints on some day would otherwise get a "30-day" window that
@@ -22,6 +23,7 @@ daily AS (
         v.date_received,
         v.product_family,
         sum(v.complaints) AS complaints,
+        sum(v.responded) AS responded,
         sum(v.timely_responses) AS timely_responses
     FROM marts.mv_daily_volume AS v
     CROSS JOIN bounds AS b
@@ -34,6 +36,7 @@ dense AS (
         d.date_day,
         f.product_family,
         coalesce(daily.complaints, 0) AS complaints,
+        coalesce(daily.responded, 0) AS responded,
         coalesce(daily.timely_responses, 0) AS timely_responses
     FROM warehouse.dim_date AS d
     CROSS JOIN bounds AS b
@@ -51,6 +54,7 @@ rolling AS (
         product_family,
         complaints,
         sum(complaints) OVER w30 AS complaints_30d,
+        sum(responded) OVER w30 AS responded_30d,
         sum(timely_responses) OVER w30 AS timely_30d
     FROM dense
     WINDOW w30 AS (
@@ -65,7 +69,7 @@ SELECT
     r.product_family,
     r.complaints,
     r.complaints_30d,
-    round(r.timely_30d::NUMERIC / nullif(r.complaints_30d, 0), 4) AS timely_rate_30d
+    round(r.timely_30d::NUMERIC / nullif(r.responded_30d, 0), 4) AS timely_rate_30d
 FROM rolling AS r
 CROSS JOIN bounds AS b
 WHERE r.date_day > b.last_day - 365

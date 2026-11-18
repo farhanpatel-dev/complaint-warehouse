@@ -2,15 +2,15 @@
 
 Each query run 5 times with `EXPLAIN (ANALYZE, TIMING OFF)`; server-side execution time without per-node timing overhead. Median excludes the first run. The saved plans include per-node timing.
 
-Measured 2026-11-17T01:33:13+00:00 on PostgreSQL 16.10 (Debian 16.10-1.pgdg12+1), pgvector 0.8.0; shared_buffers 512MB, work_mem 64MB, max_parallel_workers_per_gather 2, random_page_cost 1.1, jit on. Client container: 16 CPUs, 7770292 kB RAM.
+Measured 2026-11-18T06:20:42+00:00 on PostgreSQL 16.10 (Debian 16.10-1.pgdg12+1), pgvector 0.8.0; shared_buffers 512MB, work_mem 64MB, max_parallel_workers_per_gather 2, random_page_cost 1.1, jit on. Client container: 16 CPUs, 7770292 kB RAM.
 
 | query | rows | first run ms | median ms | planning ms |
 |---|---|---|---|---|
-| 01_rolling_30d_timely_rate | 4,380 | 1,720.7 | 576.2 | 0.5 |
-| 02_zscore_anomalies | 14 | 2,755.3 | 756.0 | 0.4 |
-| 03_timely_response_ranking | 202 | 15.2 | 10.5 | 0.4 |
-| 04_company_cohorts | 136 | 207.6 | 167.5 | 0.2 |
-| 05_yoy_trends | 288 | 40.3 | 49.1 | 0.3 |
+| 01_rolling_30d_timely_rate | 4,380 | 680.6 | 441.3 | 0.9 |
+| 02_zscore_anomalies | 14 | 861.0 | 694.6 | 0.5 |
+| 03_timely_response_ranking | 200 | 78.9 | 24.2 | 0.4 |
+| 04_company_cohorts | 136 | 204.0 | 173.3 | 0.2 |
+| 05_yoy_trends | 288 | 44.5 | 41.6 | 0.4 |
 
 ### 01_rolling_30d_timely_rate
 
@@ -46,7 +46,7 @@ Measured 2026-11-17T01:33:13+00:00 on PostgreSQL 16.10 (Debian 16.10-1.pgdg12+1)
 | EQUIFAX, INC. | Credit reporting agency | 2048694 | 1.0000 | 1.0000 | 2 | 2 | 1 |
 | Experian Information Solutions Inc. | Credit reporting agency | 2036606 | 1.0000 | 1.0000 | 3 | 3 | 1 |
 | JPMORGAN CHASE & CO. | Bank | 27543 | 1.0000 | 0.9999 | 4 | 1 | 1 |
-| CAPITAL ONE FINANCIAL CORPORATION | Bank | 35760 | 1.0000 | 0.9998 | 5 | 2 | 1 |
+| ENCORE CAPITAL GROUP INC. | Debt buyer or collector | 23936 | 1.0000 | 0.9998 | 5 | 1 | 1 |
 
 ### 04_company_cohorts
 

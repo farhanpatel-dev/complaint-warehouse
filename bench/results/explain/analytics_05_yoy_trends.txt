@@ -1,64 +1,64 @@
-Subquery Scan on with_prior_ytd  (cost=378.03..50135.58 rows=60000 width=228) (actual time=14.342..55.903 rows=288 loops=1)
+Subquery Scan on with_prior_ytd  (cost=379.03..50136.58 rows=60000 width=228) (actual time=11.936..56.696 rows=288 loops=1)
   Filter: (with_prior_ytd.month > ($1 - '2 years'::interval))
   Rows Removed by Filter: 1872
-  Buffers: shared hit=24
+  Buffers: shared hit=25
   CTE monthly
-    ->  HashAggregate  (cost=53.94..56.19 rows=180 width=54) (actual time=0.927..1.176 rows=1691 loops=1)
+    ->  HashAggregate  (cost=54.94..57.19 rows=180 width=54) (actual time=0.460..0.657 rows=1691 loops=1)
           Group Key: mv_product_monthly.month, mv_product_monthly.product_family
           Batches: 1  Memory Usage: 593kB
-          Buffers: shared hit=24
-          ->  Seq Scan on mv_product_monthly  (cost=0.00..41.11 rows=1711 width=30) (actual time=0.008..0.151 rows=1711 loops=1)
-                Buffers: shared hit=24
+          Buffers: shared hit=25
+          ->  Seq Scan on mv_product_monthly  (cost=0.00..42.11 rows=1711 width=30) (actual time=0.004..0.101 rows=1711 loops=1)
+                Buffers: shared hit=25
   InitPlan 2 (returns $1)
-    ->  Aggregate  (cost=4.05..4.06 rows=1 width=4) (actual time=0.143..0.144 rows=1 loops=1)
-          ->  CTE Scan on monthly m_1  (cost=0.00..3.60 rows=180 width=4) (actual time=0.001..0.071 rows=1691 loops=1)
-  ->  WindowAgg  (cost=317.77..45875.32 rows=180000 width=164) (actual time=14.058..55.295 rows=2160 loops=1)
-        Buffers: shared hit=24
-        ->  Subquery Scan on trend  (cost=317.77..42725.32 rows=180000 width=132) (actual time=14.054..54.464 rows=2160 loops=1)
-              Buffers: shared hit=24
-              ->  WindowAgg  (cost=317.77..40925.32 rows=180000 width=164) (actual time=14.054..54.308 rows=2160 loops=1)
-                    Buffers: shared hit=24
+    ->  Aggregate  (cost=4.05..4.06 rows=1 width=4) (actual time=0.142..0.143 rows=1 loops=1)
+          ->  CTE Scan on monthly m_1  (cost=0.00..3.60 rows=180 width=4) (actual time=0.000..0.071 rows=1691 loops=1)
+  ->  WindowAgg  (cost=317.77..45875.32 rows=180000 width=164) (actual time=11.659..56.078 rows=2160 loops=1)
+        Buffers: shared hit=25
+        ->  Subquery Scan on trend  (cost=317.77..42725.32 rows=180000 width=132) (actual time=11.656..55.105 rows=2160 loops=1)
+              Buffers: shared hit=25
+              ->  WindowAgg  (cost=317.77..40925.32 rows=180000 width=164) (actual time=11.656..54.932 rows=2160 loops=1)
+                    Buffers: shared hit=25
                     InitPlan 3 (returns $2)
-                      ->  Aggregate  (cost=4.05..4.06 rows=1 width=4) (actual time=0.138..0.138 rows=1 loops=1)
-                            ->  CTE Scan on monthly m_2  (cost=0.00..3.60 rows=180 width=4) (actual time=0.000..0.067 rows=1691 loops=1)
+                      ->  Aggregate  (cost=4.05..4.06 rows=1 width=4) (actual time=0.142..0.143 rows=1 loops=1)
+                            ->  CTE Scan on monthly m_2  (cost=0.00..3.60 rows=180 width=4) (actual time=0.000..0.069 rows=1691 loops=1)
                     InitPlan 4 (returns $3)
-                      ->  Aggregate  (cost=4.05..4.06 rows=1 width=4) (actual time=0.137..0.138 rows=1 loops=1)
-                            ->  CTE Scan on monthly m_3  (cost=0.00..3.60 rows=180 width=4) (actual time=0.000..0.068 rows=1691 loops=1)
-                    ->  Incremental Sort  (cost=309.65..36417.20 rows=180000 width=132) (actual time=14.049..53.493 rows=2160 loops=1)
+                      ->  Aggregate  (cost=4.05..4.06 rows=1 width=4) (actual time=0.141..0.142 rows=1 loops=1)
+                            ->  CTE Scan on monthly m_3  (cost=0.00..3.60 rows=180 width=4) (actual time=0.000..0.072 rows=1691 loops=1)
+                    ->  Incremental Sort  (cost=309.65..36417.20 rows=180000 width=132) (actual time=11.653..54.134 rows=2160 loops=1)
                           Sort Key: monthly.product_family, ((gs.gs)::date)
                           Presorted Key: monthly.product_family
                           Full-sort Groups: 12  Sort Method: quicksort  Average Memory: 29kB  Peak Memory: 29kB
                           Pre-sorted Groups: 12  Sort Method: quicksort  Average Memory: 36kB  Peak Memory: 36kB
-                          Buffers: shared hit=24
-                          ->  WindowAgg  (cost=120.53..25194.40 rows=180000 width=132) (actual time=7.091..53.026 rows=2160 loops=1)
-                                Buffers: shared hit=24
-                                ->  Incremental Sort  (cost=120.53..20244.40 rows=180000 width=100) (actual time=7.077..51.766 rows=2160 loops=1)
+                          Buffers: shared hit=25
+                          ->  WindowAgg  (cost=120.53..25194.40 rows=180000 width=132) (actual time=6.525..53.616 rows=2160 loops=1)
+                                Buffers: shared hit=25
+                                ->  Incremental Sort  (cost=120.53..20244.40 rows=180000 width=100) (actual time=6.521..52.190 rows=2160 loops=1)
                                       Sort Key: monthly.product_family, (EXTRACT(year FROM (gs.gs)::date)), ((gs.gs)::date)
                                       Presorted Key: monthly.product_family
                                       Full-sort Groups: 12  Sort Method: quicksort  Average Memory: 28kB  Peak Memory: 28kB
                                       Pre-sorted Groups: 12  Sort Method: quicksort  Average Memory: 34kB  Peak Memory: 34kB
-                                      Buffers: shared hit=24
-                                      ->  Merge Left Join  (cost=20.69..9021.59 rows=180000 width=100) (actual time=2.403..50.934 rows=2160 loops=1)
+                                      Buffers: shared hit=25
+                                      ->  Merge Left Join  (cost=20.69..9021.59 rows=180000 width=100) (actual time=1.844..51.302 rows=2160 loops=1)
                                             Merge Cond: (monthly.product_family = m.product_family)
                                             Join Filter: ((gs.gs)::date = m.month)
                                             Rows Removed by Join Filter: 302689
-                                            Buffers: shared hit=24
-                                            ->  Nested Loop  (cost=10.35..3611.25 rows=180000 width=40) (actual time=1.975..2.615 rows=2160 loops=1)
-                                                  Buffers: shared hit=24
-                                                  ->  Unique  (cost=10.34..11.24 rows=180 width=32) (actual time=1.664..1.945 rows=12 loops=1)
-                                                        Buffers: shared hit=24
-                                                        ->  Sort  (cost=10.34..10.79 rows=180 width=32) (actual time=1.663..1.736 rows=1691 loops=1)
+                                            Buffers: shared hit=25
+                                            ->  Nested Loop  (cost=10.35..3611.25 rows=180000 width=40) (actual time=1.449..2.030 rows=2160 loops=1)
+                                                  Buffers: shared hit=25
+                                                  ->  Unique  (cost=10.34..11.24 rows=180 width=32) (actual time=1.143..1.368 rows=12 loops=1)
+                                                        Buffers: shared hit=25
+                                                        ->  Sort  (cost=10.34..10.79 rows=180 width=32) (actual time=1.142..1.206 rows=1691 loops=1)
                                                               Sort Key: monthly.product_family
                                                               Sort Method: quicksort  Memory: 98kB
-                                                              Buffers: shared hit=24
-                                                              ->  CTE Scan on monthly  (cost=0.00..3.60 rows=180 width=32) (actual time=0.929..1.449 rows=1691 loops=1)
-                                                                    Buffers: shared hit=24
-                                                  ->  Function Scan on generate_series gs  (cost=0.01..10.01 rows=1000 width=8) (actual time=0.026..0.038 rows=180 loops=12)
-                                            ->  Sort  (cost=10.34..10.79 rows=180 width=68) (actual time=0.397..11.861 rows=304201 loops=1)
+                                                              Buffers: shared hit=25
+                                                              ->  CTE Scan on monthly  (cost=0.00..3.60 rows=180 width=32) (actual time=0.461..0.915 rows=1691 loops=1)
+                                                                    Buffers: shared hit=25
+                                                  ->  Function Scan on generate_series gs  (cost=0.01..10.01 rows=1000 width=8) (actual time=0.026..0.037 rows=180 loops=12)
+                                            ->  Sort  (cost=10.34..10.79 rows=180 width=68) (actual time=0.367..11.079 rows=304201 loops=1)
                                                   Sort Key: m.product_family
                                                   Sort Method: quicksort  Memory: 144kB
-                                                  ->  CTE Scan on monthly m  (cost=0.00..3.60 rows=180 width=68) (actual time=0.001..0.106 rows=1691 loops=1)
+                                                  ->  CTE Scan on monthly m  (cost=0.00..3.60 rows=180 width=68) (actual time=0.000..0.107 rows=1691 loops=1)
 Planning:
   Buffers: shared hit=1
-Planning Time: 0.370 ms
-Execution Time: 56.009 ms
+Planning Time: 0.244 ms
+Execution Time: 56.776 ms
