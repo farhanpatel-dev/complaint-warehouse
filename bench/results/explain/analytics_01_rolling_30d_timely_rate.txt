@@ -1,71 +1,77 @@
-Nested Loop  (cost=71409.83..71874.84 rows=3100 width=116) (actual time=537.225..542.674 rows=4380 loops=1)
+Nested Loop  (cost=95516.88..105204.39 rows=51667 width=132) (actual time=438.262..445.609 rows=4380 loops=1)
   Join Filter: (d.date_day > (b.last_day - 365))
   Rows Removed by Join Filter: 348
-  Buffers: shared hit=260442 read=7687
+  Buffers: shared hit=262534 read=7199
   CTE bounds
-    ->  Result  (cost=0.58..0.59 rows=1 width=4) (actual time=0.044..0.046 rows=1 loops=1)
-          Buffers: shared hit=5
+    ->  Result  (cost=0.59..0.60 rows=1 width=4) (actual time=0.034..0.037 rows=1 loops=1)
+          Buffers: shared hit=6
           InitPlan 1 (returns $0)
-            ->  Limit  (cost=0.55..0.58 rows=1 width=4) (actual time=0.041..0.043 rows=1 loops=1)
-                  Buffers: shared hit=5
-                  ->  Index Only Scan Backward using a37d69d7bd1fc190f28710939a96a648 on mv_daily_volume mv_daily_volume_1  (cost=0.55..42909.88 rows=1593033 width=4) (actual time=0.040..0.041 rows=1 loops=1)
+            ->  Limit  (cost=0.55..0.59 rows=1 width=4) (actual time=0.025..0.026 rows=1 loops=1)
+                  Buffers: shared hit=6
+                  ->  Index Only Scan Backward using "737f2fe9fb69015f5b51e591baa21bce" on mv_daily_volume mv_daily_volume_1  (cost=0.55..64721.24 rows=1585068 width=4) (actual time=0.022..0.023 rows=1 loops=1)
                         Index Cond: (date_received IS NOT NULL)
-                        Heap Fetches: 0
-                        Buffers: shared hit=5
-  ->  WindowAgg  (cost=71409.24..71618.49 rows=9300 width=116) (actual time=537.195..540.862 rows=4728 loops=1)
-        Buffers: shared hit=260442 read=7687
-        ->  Sort  (cost=71409.24..71432.49 rows=9300 width=84) (actual time=537.175..537.711 rows=4728 loops=1)
+                        Heap Fetches: 1
+                        Buffers: shared hit=6
+  ->  WindowAgg  (cost=95516.27..99391.27 rows=155000 width=164) (actual time=438.211..443.582 rows=4728 loops=1)
+        Buffers: shared hit=262534 read=7199
+        ->  Sort  (cost=95516.27..95903.77 rows=155000 width=132) (actual time=423.551..423.893 rows=4728 loops=1)
               Sort Key: mv_daily_volume.product_family, d.date_day
-              Sort Method: quicksort  Memory: 472kB
-              Buffers: shared hit=260442 read=7687
-              ->  Hash Right Join  (cost=68776.57..70796.23 rows=9300 width=84) (actual time=529.402..533.221 rows=4728 loops=1)
-                    Hash Cond: ((v.date_received = d.date_day) AND (v.product_family = mv_daily_volume.product_family))
-                    Buffers: shared hit=260442 read=7687
-                    ->  HashAggregate  (cost=40759.79..41690.03 rows=62016 width=84) (actual time=353.237..354.944 rows=4325 loops=1)
-                          Group Key: v.date_received, v.product_family
-                          Batches: 1  Memory Usage: 5137kB
-                          Buffers: shared hit=249688
-                          ->  Nested Loop  (cost=0.56..35449.68 rows=531011 width=36) (actual time=0.021..293.283 rows=247591 loops=1)
-                                Buffers: shared hit=249688
-                                ->  CTE Scan on bounds b_2  (cost=0.00..0.02 rows=1 width=4) (actual time=0.000..0.003 rows=1 loops=1)
-                                ->  Index Scan using a37d69d7bd1fc190f28710939a96a648 on mv_daily_volume v  (cost=0.56..30139.55 rows=531011 width=36) (actual time=0.018..264.558 rows=247591 loops=1)
-                                      Index Cond: (date_received > (b_2.last_day - 394))
-                                      Buffers: shared hit=249688
-                    ->  Hash  (cost=27877.28..27877.28 rows=9300 width=20) (actual time=175.941..176.108 rows=4728 loops=1)
-                          Buckets: 16384  Batches: 1  Memory Usage: 383kB
-                          Buffers: shared hit=10754 read=7687
-                          ->  Nested Loop  (cost=27732.40..27877.28 rows=9300 width=20) (actual time=174.447..175.197 rows=4728 loops=1)
-                                Buffers: shared hit=10754 read=7687
-                                ->  Unique  (cost=27732.12..27732.24 rows=12 width=16) (actual time=174.376..174.547 rows=12 loops=1)
-                                      Buffers: shared hit=10745 read=7687
-                                      ->  Sort  (cost=27732.12..27732.18 rows=24 width=16) (actual time=174.374..174.540 rows=36 loops=1)
-                                            Sort Key: mv_daily_volume.product_family
-                                            Sort Method: quicksort  Memory: 26kB
-                                            Buffers: shared hit=10745 read=7687
-                                            ->  Gather  (cost=27729.05..27731.57 rows=24 width=16) (actual time=174.183..174.513 rows=36 loops=1)
-                                                  Workers Planned: 2
-                                                  Workers Launched: 2
-                                                  Buffers: shared hit=10745 read=7687
-                                                  ->  HashAggregate  (cost=26729.05..26729.17 rows=12 width=16) (actual time=169.376..169.379 rows=12 loops=3)
-                                                        Group Key: mv_daily_volume.product_family
-                                                        Batches: 1  Memory Usage: 24kB
-                                                        Buffers: shared hit=10745 read=7687
-                                                        Worker 0:  Batches: 1  Memory Usage: 24kB
-                                                        Worker 1:  Batches: 1  Memory Usage: 24kB
-                                                        ->  Parallel Seq Scan on mv_daily_volume  (cost=0.00..25069.64 rows=663764 width=16) (actual time=0.039..61.182 rows=531011 loops=3)
-                                                              Buffers: shared hit=10745 read=7687
-                                ->  Materialize  (cost=0.29..30.73 rows=775 width=4) (actual time=0.006..0.026 rows=394 loops=12)
-                                      Buffers: shared hit=9
-                                      ->  Nested Loop  (cost=0.29..26.86 rows=775 width=4) (actual time=0.067..0.124 rows=394 loops=1)
-                                            Buffers: shared hit=9
-                                            ->  CTE Scan on bounds b_1  (cost=0.00..0.02 rows=1 width=4) (actual time=0.045..0.046 rows=1 loops=1)
-                                                  Buffers: shared hit=5
-                                            ->  Index Only Scan using dim_date_date_idx on dim_date d  (cost=0.29..19.09 rows=775 width=4) (actual time=0.018..0.051 rows=394 loops=1)
-                                                  Index Cond: ((date_day > (b_1.last_day - 394)) AND (date_day <= b_1.last_day))
-                                                  Heap Fetches: 0
-                                                  Buffers: shared hit=4
+              Sort Method: quicksort  Memory: 493kB
+              Buffers: shared hit=262534 read=7199
+              ->  Hash Left Join  (cost=79372.04..82153.79 rows=155000 width=132) (actual time=419.558..421.998 rows=4728 loops=1)
+                    Hash Cond: ((d.date_day = daily.date_received) AND (mv_daily_volume.product_family = daily.product_family))
+                    Buffers: shared hit=262534 read=7199
+                    ->  Nested Loop  (cost=29388.62..31356.63 rows=155000 width=36) (actual time=150.698..151.570 rows=4728 loops=1)
+                          Buffers: shared hit=12843 read=7199
+                          ->  Unique  (cost=29388.34..29390.34 rows=200 width=32) (actual time=150.641..150.808 rows=12 loops=1)
+                                Buffers: shared hit=12833 read=7199
+                                ->  Sort  (cost=29388.34..29389.34 rows=400 width=32) (actual time=150.639..150.791 rows=36 loops=1)
+                                      Sort Key: mv_daily_volume.product_family
+                                      Sort Method: quicksort  Memory: 26kB
+                                      Buffers: shared hit=12833 read=7199
+                                      ->  Gather  (cost=29329.05..29371.05 rows=400 width=32) (actual time=150.450..150.769 rows=36 loops=1)
+                                            Workers Planned: 2
+                                            Workers Launched: 2
+                                            Buffers: shared hit=12833 read=7199
+                                            ->  HashAggregate  (cost=28329.05..28331.05 rows=200 width=32) (actual time=128.618..128.621 rows=12 loops=3)
+                                                  Group Key: mv_daily_volume.product_family
+                                                  Batches: 1  Memory Usage: 40kB
+                                                  Buffers: shared hit=12833 read=7199
+                                                  Worker 0:  Batches: 1  Memory Usage: 40kB
+                                                  Worker 1:  Batches: 1  Memory Usage: 40kB
+                                                  ->  Parallel Seq Scan on mv_daily_volume  (cost=0.00..26669.64 rows=663764 width=32) (actual time=0.042..53.227 rows=531011 loops=3)
+                                                        Buffers: shared hit=12833 read=7199
+                          ->  Materialize  (cost=0.29..30.73 rows=775 width=4) (actual time=0.005..0.029 rows=394 loops=12)
+                                Buffers: shared hit=10
+                                ->  Nested Loop  (cost=0.29..26.86 rows=775 width=4) (actual time=0.052..0.109 rows=394 loops=1)
+                                      Buffers: shared hit=10
+                                      ->  CTE Scan on bounds b_1  (cost=0.00..0.02 rows=1 width=4) (actual time=0.036..0.036 rows=1 loops=1)
+                                            Buffers: shared hit=6
+                                      ->  Index Only Scan using dim_date_date_idx on dim_date d  (cost=0.29..19.09 rows=775 width=4) (actual time=0.008..0.040 rows=394 loops=1)
+                                            Index Cond: ((date_day > (b_1.last_day - 394)) AND (date_day <= b_1.last_day))
+                                            Heap Fetches: 0
+                                            Buffers: shared hit=4
+                    ->  Hash  (cost=49383.41..49383.41 rows=40000 width=132) (actual time=268.460..268.463 rows=4325 loops=1)
+                          Buckets: 65536  Batches: 1  Memory Usage: 813kB
+                          Buffers: shared hit=249691
+                          ->  Subquery Scan on daily  (cost=48283.41..49383.41 rows=40000 width=132) (actual time=265.671..267.213 rows=4325 loops=1)
+                                Buffers: shared hit=249691
+                                ->  HashAggregate  (cost=48283.41..48983.41 rows=40000 width=132) (actual time=265.667..266.903 rows=4325 loops=1)
+                                      Group Key: v.date_received, v.product_family
+                                      Batches: 1  Memory Usage: 3601kB
+                                      Buffers: shared hit=249691
+                                      ->  Nested Loop  (cost=0.56..41645.78 rows=531011 width=60) (actual time=0.029..219.992 rows=247591 loops=1)
+                                            Buffers: shared hit=249691
+                                            ->  CTE Scan on bounds b_2  (cost=0.00..0.02 rows=1 width=4) (actual time=0.001..0.002 rows=1 loops=1)
+                                            ->  Index Scan using "737f2fe9fb69015f5b51e591baa21bce" on mv_daily_volume v  (cost=0.56..36335.65 rows=531011 width=60) (actual time=0.017..192.926 rows=247591 loops=1)
+                                                  Index Cond: (date_received > (b_2.last_day - 394))
+                                                  Buffers: shared hit=249691
   ->  CTE Scan on bounds b  (cost=0.00..0.02 rows=1 width=4) (actual time=0.000..0.000 rows=1 loops=4728)
 Planning:
   Buffers: shared hit=1
-Planning Time: 0.508 ms
-Execution Time: 545.576 ms
+Planning Time: 0.504 ms
+JIT:
+  Functions: 65
+  Options: Inlining false, Optimization false, Expressions true, Deforming true
+  Timing: Generation 1.775 ms, Inlining 0.000 ms, Optimization 1.512 ms, Emission 24.269 ms, Total 27.556 ms
+Execution Time: 447.549 ms

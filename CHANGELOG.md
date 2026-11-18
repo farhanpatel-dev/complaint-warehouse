@@ -57,6 +57,11 @@ All notable changes to this project are documented here. The format follows
 - `/health` endpoint reporting Postgres and pgvector versions.
 - Makefile, `.env.example`, pre-commit (ruff, black, sqlfluff), pytest suite and GitHub Actions CI.
 
+### Fixed
+- Timely rates in the marts and analytics queries now exclude complaints still "In progress".
+  The CFPB publishes them as timely before the company answers (651k complaints, 74% of the
+  current month), which inflated recent months. The marts gain a `responded` column.
+
 ### Changed
 - Postgres `random_page_cost` set to 1.1 (SSD): a search filtered to one year chose a 64 s
   sequential scan over a 1.6 s index nested loop with the default of 4.
